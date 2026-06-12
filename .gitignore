@@ -1,0 +1,10 @@
+node_modules
+.pnpm-store
+.next
+dist
+.DS_Store
+*.log
+.env*.local
+.turbo
+coverage
+.vercel

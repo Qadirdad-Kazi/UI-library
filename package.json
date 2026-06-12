@@ -1,0 +1,17 @@
+{
+  "name": "nebula-ui-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm -r build",
+    "build:ui": "pnpm --filter @nebula/ui build",
+    "build:web": "pnpm --filter web build",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r exec rm -rf .next dist node_modules"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
