@@ -49,7 +49,7 @@ export function ContactCards({
         <div
           className={cn(
             "grid gap-5",
-            compact ? "grid-cols-1 sm:grid-cols-2" : "md:grid-cols-3"
+            compact ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 md:grid-cols-3"
           )}
         >
           {items.map((item, idx) => (

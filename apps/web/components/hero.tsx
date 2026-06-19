@@ -46,7 +46,7 @@ export function Hero() {
       <div className="absolute -top-32 left-1/2 size-[600px] -translate-x-1/2 rounded-full bg-violet-500/20 blur-[120px]" />
       <div className="absolute top-1/3 -right-32 size-[500px] rounded-full bg-cyan-500/15 blur-[120px]" />
 
-      <div className="absolute inset-0 -z-10">
+      <div className="pointer-events-none absolute inset-0 -z-10">
         <AiSphere className="size-full" />
       </div>
 

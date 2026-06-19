@@ -336,6 +336,26 @@ export const COMPONENTS: ComponentRegistryEntry[] = [
       'import { ToastProvider, useToast } from "@nebula/ui";',
     installCommand: "npm install @nebula/ui",
   },
+  {
+    slug: "border-beam",
+    name: "Border Beam",
+    category: "primitives",
+    tagline: "Looping animated glowing border sweep",
+    description:
+      "A responsive border overlay component that animates a colored glowing laser line along its perimeter.",
+    importStatement: 'import { BorderBeam } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
+  {
+    slug: "rainbow-button",
+    name: "Rainbow Button",
+    category: "primitives",
+    tagline: "Button with shifting multi-color gradient border",
+    description:
+      "An attention-grabbing button with an animated gradient outline, dark core, and dynamic radial hover glow.",
+    importStatement: 'import { RainbowButton } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
   // ── Sections ─────────────────────────────────
   {
     slug: "hero-aurora",
@@ -707,6 +727,16 @@ export const COMPONENTS: ComponentRegistryEntry[] = [
     description:
       "Animated number ticker with scroll-triggered animation, direction control, and exponential easing.",
     importStatement: 'import { NumberTicker } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
+  {
+    slug: "sparkles-text",
+    name: "Sparkles Text",
+    category: "text-animations",
+    tagline: "Title typography with glowing animated sparkles",
+    description:
+      "A text wrapper that dynamically generates and fades in small sparkling star SVGs around your text.",
+    importStatement: 'import { SparklesText } from "@nebula/ui";',
     installCommand: "npm install @nebula/ui",
   },
 ];

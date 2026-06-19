@@ -68,8 +68,8 @@ export function FeaturedComponents() {
         <div data-feat-root className="mt-16">
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01] backdrop-blur-xl">
             {/* Tab strip */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-6">
-              <div className="flex flex-wrap gap-1">
+            <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-6">
+              <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {FEATURED_SLUGS.map((slug) => {
                   const c = COMPONENTS.find((x) => x.slug === slug);
                   if (!c) return null;
@@ -96,7 +96,7 @@ export function FeaturedComponents() {
                   );
                 })}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <button
                   onClick={handleCopy}
                   className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs font-medium text-white/80 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white"

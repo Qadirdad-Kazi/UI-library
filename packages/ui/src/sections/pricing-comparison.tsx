@@ -63,7 +63,7 @@ export function PricingComparison({
               <tr className="border-b border-white/10">
                 <th
                   className={cn(
-                    "px-5 text-left text-xs uppercase tracking-[0.18em] text-white/40",
+                    "min-w-[150px] px-5 text-left text-xs uppercase tracking-[0.18em] text-white/40",
                     compact ? "py-3" : "py-4"
                   )}
                 >
@@ -73,7 +73,7 @@ export function PricingComparison({
                   <th
                     key={plan.name}
                     className={cn(
-                      "px-5 text-left",
+                      "min-w-[150px] px-5 text-left",
                       compact ? "py-3" : "py-4",
                       plan.featured && "bg-violet-500/10"
                     )}
@@ -107,14 +107,14 @@ export function PricingComparison({
             <tbody>
               {rows.map((row, idx) => (
                 <tr key={`${row.feature}-${idx}`} className="border-b border-white/10 last:border-b-0">
-                  <td className={cn("px-5 text-white/85", compact ? "py-3" : "py-4")}>
+                  <td className={cn("min-w-[150px] px-5 text-white/85", compact ? "py-3" : "py-4")}>
                     {row.feature}
                   </td>
                   {row.values.map((value, valueIdx) => (
                     <td
                       key={`${row.feature}-${valueIdx}`}
                       className={cn(
-                        "px-5 text-white/65",
+                        "min-w-[150px] px-5 text-white/65",
                         compact ? "py-3" : "py-4",
                         plans[valueIdx]?.featured && "bg-violet-500/5"
                       )}

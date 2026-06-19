@@ -22,7 +22,7 @@ export default function DocsPage() {
     <div className="container-page pt-32 pb-24">
       <div className="grid gap-12 lg:grid-cols-[220px_1fr]">
         {/* Sidebar TOC */}
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">
             On this page
           </div>

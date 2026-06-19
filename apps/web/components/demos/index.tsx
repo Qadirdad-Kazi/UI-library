@@ -56,6 +56,9 @@ import {
   BlurReveal,
   NumberTicker,
   cn,
+  BorderBeam,
+  RainbowButton,
+  SparklesText,
 } from "@nebula/ui";
 import {
   Bot,
@@ -937,30 +940,54 @@ export function GlassModalDemo() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-center py-12">
-      <GradientButton onClick={() => setOpen(true)}>Open Modal</GradientButton>
-      <GlassModal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Welcome to Nebula"
-        description="Glassmorphism modal with focus trap, escape key, and backdrop blur."
-      >
-        <div className="space-y-4">
-          <NeonInput label="Your name" placeholder="Enter your name" accent="violet" />
-          <div className="flex justify-end gap-3">
+    <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-xl bg-[#08080e]">
+      {/* Blurred background so the modal looks in-context */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,58,237,0.12),transparent_70%)]" />
+
+      {/* Trigger button — shown when modal is closed */}
+      {!open && (
+        <GradientButton onClick={() => setOpen(true)}>Open Modal</GradientButton>
+      )}
+
+      {/* Inline modal panel (not using fixed positioning) */}
+      {open && (
+        <div
+          className="absolute inset-0 grid place-items-center bg-black/60 backdrop-blur-sm animate-[fade-in_200ms_ease-out]"
+          onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
+        >
+          <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-[0_0_60px_-10px_rgba(139,92,246,0.3)] backdrop-blur-xl animate-[scale-fade-in_300ms_ease-out] mx-4">
+            {/* Gradient top border */}
+            <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/60 to-transparent" />
+            {/* Close button */}
             <button
-              type="button"
               onClick={() => setOpen(false)}
-              className="rounded-lg px-4 py-2 text-sm text-white/60 transition hover:text-white"
+              aria-label="Close"
+              className="absolute right-4 top-4 z-20 grid size-8 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white/60 transition hover:bg-white/[0.08] hover:text-white"
             >
-              Cancel
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
             </button>
-            <GradientButton size="sm" onClick={() => setOpen(false)}>
-              Confirm
-            </GradientButton>
+            <div className="p-6 sm:p-8">
+              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Welcome to Nebula</h2>
+              <p className="mt-2 text-sm text-white/60">This is a glassmorphism modal with focus trap and keyboard handling.</p>
+              <div className="mt-6 space-y-4">
+                <NeonInput label="Your name" placeholder="Enter your name" accent="violet" />
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg px-4 py-2 text-sm text-white/60 transition hover:text-white"
+                  >
+                    Cancel
+                  </button>
+                  <GradientButton size="sm" onClick={() => setOpen(false)}>Confirm</GradientButton>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </GlassModal>
+      )}
     </div>
   );
 }
@@ -988,11 +1015,15 @@ export function GlowAvatarDemo() {
 
 export function GradientDividerDemo() {
   return (
-    <div className="w-full max-w-md mx-auto space-y-6 py-10">
-      <GradientDivider variant="aurora" />
-      <GradientDivider variant="sunset" />
-      <GradientDivider variant="ocean" />
-      <GradientDivider variant="subtle" />
+    <div className="w-full max-w-md mx-auto py-8 space-y-1">
+      {(["aurora", "sunset", "ocean", "subtle"] as const).map((v) => (
+        <div key={v}>
+          <div className="flex items-center justify-between px-1 pb-2 pt-4">
+            <span className="text-[11px] uppercase tracking-[0.15em] text-white/35">{v}</span>
+          </div>
+          <GradientDivider variant={v} spacing="none" />
+        </div>
+      ))}
     </div>
   );
 }
@@ -1185,6 +1216,44 @@ export function ToastDemo() {
         <ToastDemoButtons />
       </div>
     </ToastProvider>
+  );
+}
+
+/* ----------------------- Demo: Border Beam ----------------------- */
+
+export function BorderBeamDemo() {
+  return (
+    <div className="relative flex h-[200px] w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#05050a] p-6">
+      <span className="text-sm text-white/50">Card with Border Beam</span>
+      <BorderBeam duration={5} borderWidth={2} colorFrom="#a78bfa" colorTo="#22d3ee" />
+    </div>
+  );
+}
+
+/* ----------------------- Demo: Rainbow Button ----------------------- */
+
+export function RainbowButtonDemo() {
+  return (
+    <div className="flex w-full items-center justify-center py-10">
+      <RainbowButton onClick={() => alert("Rainbow Button Clicked!")}>
+        Rainbow Button
+      </RainbowButton>
+    </div>
+  );
+}
+
+/* ----------------------- Demo: Sparkles Text ----------------------- */
+
+export function SparklesTextDemo() {
+  return (
+    <div className="flex w-full items-center justify-center py-12">
+      <SparklesText
+        text="Sparkles Text"
+        className="text-4xl md:text-5xl font-bold tracking-tight text-white"
+        sparklesCount={8}
+        color="#fbbf24"
+      />
+    </div>
   );
 }
 
@@ -1543,6 +1612,36 @@ export function Example() {
     </>
   );
 }`,
+  "border-beam": `import { BorderBeam } from "@nebula/ui";
+
+export function Example() {
+  return (
+    <div className="relative h-[200px] w-full rounded-2xl border border-white/10 bg-black/40">
+      <BorderBeam duration={5} borderWidth={2} colorFrom="#a78bfa" colorTo="#22d3ee" />
+    </div>
+  );
+}`,
+  "rainbow-button": `import { RainbowButton } from "@nebula/ui";
+
+export function Example() {
+  return (
+    <RainbowButton onClick={() => console.log("clicked")}>
+      Get Started
+    </RainbowButton>
+  );
+}`,
+  "sparkles-text": `import { SparklesText } from "@nebula/ui";
+
+export function Example() {
+  return (
+    <SparklesText
+      text="Sparkles Text"
+      className="text-4xl font-bold"
+      sparklesCount={8}
+      color="#fbbf24"
+    />
+  );
+}`,
 };
 
 /* ----------------------- Usage strings ----------------------- */
@@ -1693,6 +1792,24 @@ export const DEMO_USAGE: Record<string, string> = {
 // Inside a child component:
 const { toast } = useToast();
 toast({ type: "success", title: "Saved!", message: "Changes applied." });`,
+  "border-beam": `<BorderBeam
+  duration={6}          // duration of loop in seconds
+  borderWidth={1.5}     // width of border stroke in pixels
+  colorFrom="#a78bfa"   // start color of gradient
+  colorTo="#22d3ee"     // end color of gradient
+  delay={0}             // animation delay in seconds
+/>`,
+  "rainbow-button": `<RainbowButton
+  glow={true}           // enable outer hover glow behind button
+  onClick={() => {}}    // standard click handler
+>
+  Button Text
+</RainbowButton>`,
+  "sparkles-text": `<SparklesText
+  text="Typography with flair"
+  sparklesCount={6}     // number of sparkles to animate
+  color="#fbbf24"       // color of sparkles
+/>`,
 };
 
 /* ----------------------- Demo registry ----------------------- */
@@ -1740,6 +1857,9 @@ export const DEMO_COMPONENTS: Record<string, ComponentType> = {
   "shimmer-link": ShimmerLinkDemo,
   "glow-progress": GlowProgressDemo,
   toast: ToastDemo,
+  "border-beam": BorderBeamDemo,
+  "rainbow-button": RainbowButtonDemo,
+  "sparkles-text": SparklesTextDemo,
   // Backgrounds
   "particle-field": ParticleFieldDemo,
   "aurora-background": AuroraBackgroundDemo,

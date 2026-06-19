@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { cn } from "../utils/cn";
 import { GradientButton } from "../components/gradient-button";
 
@@ -23,34 +23,75 @@ export function NavbarFloating({
   embedded = false,
   className,
 }: NavbarFloatingProps) {
+  const [open, setOpen] = useState(false);
+
   return (
     <nav
       className={cn(
         embedded
           ? "relative w-full"
           : "fixed left-1/2 top-6 z-[100] -translate-x-1/2",
-        "flex items-center gap-1 rounded-full border border-white/10 bg-[#0a0a14]/80 px-2 py-1.5 shadow-2xl backdrop-blur-xl",
+        "flex flex-col sm:flex-row sm:items-center gap-1 rounded-2xl sm:rounded-full border border-white/10 bg-[#0a0a14]/90 px-3 py-2 sm:px-2 sm:py-1.5 shadow-2xl backdrop-blur-xl transition-all duration-300",
         embedded && "mx-auto w-fit",
+        open ? "w-[calc(100vw-2rem)] max-w-[320px] items-stretch" : "items-center",
         className
       )}
       aria-label="Main navigation"
     >
-      {links.map((link) => (
-        <a
-          key={link.href}
-          href={link.href}
-          className="rounded-full px-4 py-1.5 text-sm text-white/60 transition hover:bg-white/[0.06] hover:text-white"
+      {/* Mobile top strip */}
+      <div className="flex w-full items-center justify-between sm:hidden">
+        <span className="pl-2 text-xs font-semibold uppercase tracking-wider text-white/50">
+          Menu
+        </span>
+        <button
+          onClick={() => setOpen(!open)}
+          className="grid size-8 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:bg-white/[0.08]"
+          aria-label="Toggle floating menu"
         >
-          {link.label}
-        </a>
-      ))}
-      {cta && (
-        <a href={cta.href} onClick={cta.onClick} className="ml-1">
-          <GradientButton variant="aurora" size="sm">
-            {cta.label}
-          </GradientButton>
-        </a>
-      )}
+          {open ? (
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} className="size-3.5">
+              <path d="M3.75 3.75l8.5 8.5M12.25 3.75l-8.5 8.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} className="size-3.5">
+              <path d="M2.75 12.25h10.5M2.75 8h10.5M2.75 3.75h10.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Expandable links list */}
+      <div
+        className={cn(
+          "flex flex-col sm:flex-row gap-1 sm:items-center",
+          open ? "mt-3 flex" : "hidden sm:flex"
+        )}
+      >
+        {links.map((link) => (
+          <a
+            key={link.href}
+            href={link.href}
+            onClick={() => setOpen(false)}
+            className="rounded-xl sm:rounded-full px-4 py-2 sm:py-1.5 text-sm text-white/60 transition hover:bg-white/[0.06] hover:text-white"
+          >
+            {link.label}
+          </a>
+        ))}
+        {cta && (
+          <a
+            href={cta.href}
+            onClick={(e) => {
+              setOpen(false);
+              cta.onClick?.();
+            }}
+            className="mt-2 sm:mt-0 sm:ml-1"
+          >
+            <GradientButton variant="aurora" size="sm" className="w-full sm:w-auto">
+              {cta.label}
+            </GradientButton>
+          </a>
+        )}
+      </div>
     </nav>
   );
 }

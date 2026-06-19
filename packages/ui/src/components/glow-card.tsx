@@ -13,6 +13,7 @@ import { cn } from "../utils/cn";
 export interface GlowCardProps extends HTMLAttributes<HTMLDivElement> {
   glowColor?: string;
   intensity?: "low" | "medium" | "high";
+  /** @deprecated borderGradient is no longer used */
   borderGradient?: boolean;
 }
 
@@ -28,7 +29,7 @@ export const GlowCard = forwardRef<HTMLDivElement, GlowCardProps>(
       className,
       glowColor = "#7c3aed",
       intensity = "medium",
-      borderGradient = true,
+      borderGradient: _bg,
       children,
       onMouseMove,
       ...props
@@ -54,10 +55,7 @@ export const GlowCard = forwardRef<HTMLDivElement, GlowCardProps>(
         onMouseMove={handleMouseMove}
         className={cn(
           "group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-xl",
-          "transition-all duration-300",
-          "hover:border-white/20",
-          borderGradient &&
-            "before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:p-px before:[background:linear-gradient(140deg,rgba(255,255,255,0.18),transparent_40%,transparent_60%,rgba(255,255,255,0.08))] before:[mask:linear-gradient(#000,#000)_content-box,linear-gradient(#000,#000)] before:[mask-composite:exclude]",
+          "transition-all duration-300 hover:border-white/20",
           className
         )}
         style={
@@ -68,6 +66,16 @@ export const GlowCard = forwardRef<HTMLDivElement, GlowCardProps>(
         }
         {...props}
       >
+        {/* Subtle top-left specular highlight — cross-browser safe */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-2xl opacity-60"
+          style={{
+            background:
+              "linear-gradient(140deg, rgba(255,255,255,0.06) 0%, transparent 40%)",
+          }}
+        />
+        {/* Mouse-tracking glow */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -83,3 +91,4 @@ export const GlowCard = forwardRef<HTMLDivElement, GlowCardProps>(
 );
 
 GlowCard.displayName = "GlowCard";
+

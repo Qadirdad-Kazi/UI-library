@@ -110,16 +110,16 @@ export function HeroAurora({
         )}
 
         {stats && stats.length > 0 && !compact && (
-          <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-white/50">
+          <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-4 md:gap-x-8 text-sm text-white/50">
             {stats.map((stat, i) => (
-              <div key={stat.label} className="flex items-center gap-8">
+              <div key={stat.label} className="flex items-center gap-6 md:gap-8">
                 <div>
                   <div className="text-2xl font-semibold text-white">
                     {stat.value}
                   </div>
                   <div>{stat.label}</div>
                 </div>
-                {i < stats.length - 1 && <div className="h-8 w-px bg-white/10" />}
+                {i < stats.length - 1 && <div className="hidden sm:block h-8 w-px bg-white/10" />}
               </div>
             ))}
           </div>

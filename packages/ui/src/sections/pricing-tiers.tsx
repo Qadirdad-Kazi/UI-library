@@ -83,7 +83,7 @@ export function PricingTiers({
           className={cn(
             "grid gap-6",
             sectionGridGap(compact),
-            compact ? "grid-cols-1 sm:grid-cols-2" : "md:grid-cols-3"
+            compact ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 md:grid-cols-3"
           )}
         >
           {tiers.map((tier) => (

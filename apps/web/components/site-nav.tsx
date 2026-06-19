@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@nebula/ui";
-import { Github } from "lucide-react";
+import { Github, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/#components", label: "Components" },
@@ -15,6 +15,7 @@ const NAV_LINKS = [
 
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -27,13 +28,13 @@ export function SiteNav() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled
-          ? "border-b border-white/10 bg-[rgba(5,5,10,0.7)] backdrop-blur-xl"
+        scrolled || mobileOpen
+          ? "border-b border-white/10 bg-[rgba(5,5,10,0.85)] backdrop-blur-xl"
           : "border-b border-transparent"
       )}
     >
       <div className="container-page flex h-16 items-center justify-between">
-        <Link href="/" className="group flex items-center gap-2">
+        <Link href="/" className="group flex items-center gap-2" onClick={() => setMobileOpen(false)}>
           <span
             aria-hidden
             className="grid size-8 place-items-center rounded-lg bg-[conic-gradient(from_0deg,#7c3aed,#22d3ee,#ec4899,#7c3aed)] [animation:gradient-shift_6s_ease_infinite]"
@@ -70,8 +71,36 @@ export function SiteNav() {
           >
             <Github className="size-4" />
           </a>
+
+          {/* Mobile hamburger menu toggle */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-white/80 transition hover:border-white/20 hover:bg-white/[0.06] md:hidden"
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile navigation menu overlay */}
+      {mobileOpen && (
+        <nav className="border-t border-white/10 bg-[rgba(5,5,10,0.95)] px-6 py-4 backdrop-blur-2xl md:hidden">
+          <ul className="flex flex-col gap-2">
+            {NAV_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="block rounded-lg px-4 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/[0.06] hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }

@@ -7,6 +7,12 @@ export type {
   GradientButtonSize,
 } from "./components/gradient-button";
 
+export { BorderBeam } from "./components/border-beam";
+export type { BorderBeamProps } from "./components/border-beam";
+
+export { RainbowButton } from "./components/rainbow-button";
+export type { RainbowButtonProps } from "./components/rainbow-button";
+
 export { GlowCard } from "./components/glow-card";
 export type { GlowCardProps } from "./components/glow-card";
 
@@ -202,6 +208,9 @@ export type { MatrixRainProps } from "./backgrounds/matrix-rain";
 
 export { TypewriterText } from "./text/typewriter-text";
 export type { TypewriterTextProps } from "./text/typewriter-text";
+
+export { SparklesText } from "./text/sparkles-text";
+export type { SparklesTextProps } from "./text/sparkles-text";
 
 export { GradientTextReveal } from "./text/gradient-text-reveal";
 export type { GradientTextRevealProps } from "./text/gradient-text-reveal";

@@ -33,8 +33,8 @@ export interface BlogCardsProps extends SectionDensityProps {
 }
 
 const colClasses = {
-  2: "sm:grid-cols-2",
-  3: "sm:grid-cols-2 lg:grid-cols-3",
+  2: "grid-cols-1 sm:grid-cols-2",
+  3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
 } as const;
 
 const compactColClasses = {

@@ -56,7 +56,7 @@ export function StatsSection({
         <div
           className={cn(
             "grid gap-6",
-            compact ? "grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4"
+            compact ? "grid-cols-1 min-[400px]:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
           )}
         >
           {stats.map((stat) => (
