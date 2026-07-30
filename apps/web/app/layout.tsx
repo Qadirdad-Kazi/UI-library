@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Outfit, Syne, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
+import { ToastProvider } from "@nebula/ui";
 
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-outfit",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const syne = Syne({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-syne",
   display: "swap",
 });
 
@@ -24,14 +25,14 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nebula UI · Cinematic React Component Library",
+  title: "Nebula UI · Production-ready cinematic React components",
   description:
-    "A premium, AI-powered React component library. 3D-aware, motion-rich primitives you can copy into any project.",
+    "A premium React component library with polished primitives, motion-rich sections, animated backgrounds, and copy-paste demos.",
   metadataBase: new URL("https://nebula-ui.dev"),
   openGraph: {
     title: "Nebula UI",
     description:
-      "Cinematic React components, ready to ship. 3D-aware, motion-rich, and beautiful by default.",
+      "Cinematic React components, ready to ship. Motion-rich, accessible, and beautiful by default.",
     type: "website",
   },
 };
@@ -42,15 +43,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${outfit.variable} ${syne.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>
-        <SmoothScroll>
-          <SiteNav />
-          <main>{children}</main>
-          <SiteFooter />
-        </SmoothScroll>
+        <ToastProvider position="bottom-right">
+          <SmoothScroll>
+            <SiteNav />
+            <main>{children}</main>
+            <SiteFooter />
+          </SmoothScroll>
+        </ToastProvider>
       </body>
     </html>
   );

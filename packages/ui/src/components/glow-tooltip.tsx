@@ -11,19 +11,22 @@ import { cn } from "../utils/cn";
 
 export type GlowTooltipSide = "top" | "right" | "bottom" | "left";
 
-export interface GlowTooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, "content"> {
+export interface GlowTooltipProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, "content"> {
   content: ReactNode;
   side?: GlowTooltipSide;
-  accent?: "violet" | "cyan" | "pink";
+  accent?: "violet" | "cyan" | "pink" | "teal";
   /** Delay in ms before showing */
   delay?: number;
   children: ReactNode;
 }
 
 const accentBorder = {
-  violet: "border-violet-400/40 shadow-[0_0_20px_-4px_rgba(139,92,246,0.5)]",
-  cyan: "border-cyan-400/40 shadow-[0_0_20px_-4px_rgba(34,211,238,0.5)]",
-  pink: "border-pink-400/40 shadow-[0_0_20px_-4px_rgba(236,72,153,0.5)]",
+  violet:
+    "border-[#7c6af5]/40 shadow-[0_0_20px_-4px_rgba(124,106,245,0.45)]",
+  cyan: "border-cyan-400/40 shadow-[0_0_20px_-4px_rgba(34,211,238,0.45)]",
+  pink: "border-pink-400/40 shadow-[0_0_20px_-4px_rgba(236,72,153,0.45)]",
+  teal: "border-teal-400/40 shadow-[0_0_20px_-4px_rgba(45,212,191,0.45)]",
 } as const;
 
 const sidePositions: Record<GlowTooltipSide, string> = {
@@ -71,8 +74,8 @@ export function GlowTooltip({
         <div
           role="tooltip"
           className={cn(
-            "absolute z-50 whitespace-nowrap rounded-lg border bg-[#0a0a14]/95 px-3 py-1.5 text-xs text-white/90 backdrop-blur-xl",
-            "animate-[scale-fade-in_150ms_ease-out]",
+            "absolute z-50 whitespace-nowrap rounded-lg border bg-[rgba(12,12,22,0.95)] px-3 py-1.5 text-xs text-white/90 backdrop-blur-xl",
+            "motion-safe:animate-[nebula-scale-in_150ms_var(--nebula-ease-out)_both]",
             accentBorder[accent],
             sidePositions[side]
           )}

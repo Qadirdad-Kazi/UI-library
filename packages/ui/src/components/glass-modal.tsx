@@ -13,7 +13,8 @@ import { cn } from "../utils/cn";
 
 export type GlassModalSize = "sm" | "md" | "lg" | "full";
 
-export interface GlassModalProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
+export interface GlassModalProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
   open: boolean;
   onClose: () => void;
   title?: ReactNode;
@@ -47,10 +48,15 @@ export const GlassModal = forwardRef<HTMLDivElement, GlassModalProps>(
   ) => {
     const overlayRef = useRef<HTMLDivElement>(null);
     const panelRef = useRef<HTMLDivElement>(null);
+    const previousActiveElement = useRef<HTMLElement | null>(null);
 
-    // Focus trap & escape key
     useEffect(() => {
       if (!open) return;
+
+      previousActiveElement.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
 
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape" && !persistent) {
@@ -77,7 +83,6 @@ export const GlassModal = forwardRef<HTMLDivElement, GlassModalProps>(
       document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
 
-      // Auto-focus the panel
       requestAnimationFrame(() => {
         const focusable = panelRef.current?.querySelector<HTMLElement>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -88,6 +93,8 @@ export const GlassModal = forwardRef<HTMLDivElement, GlassModalProps>(
       return () => {
         document.removeEventListener("keydown", handleKeyDown);
         document.body.style.overflow = "";
+        previousActiveElement.current?.focus?.();
+        previousActiveElement.current = null;
       };
     }, [open, onClose, persistent]);
 
@@ -113,7 +120,7 @@ export const GlassModal = forwardRef<HTMLDivElement, GlassModalProps>(
         className={cn(
           "fixed inset-0 z-[9999] grid place-items-center p-4",
           "bg-black/60 backdrop-blur-sm",
-          "animate-[fade-in_200ms_ease-out]"
+          "motion-safe:animate-[fade-in_200ms_ease-out] motion-reduce:animate-none"
         )}
       >
         <div
@@ -125,26 +132,25 @@ export const GlassModal = forwardRef<HTMLDivElement, GlassModalProps>(
           className={cn(
             "relative w-full overflow-hidden rounded-2xl",
             "border border-white/10 bg-white/[0.04] backdrop-blur-xl",
-            "shadow-[0_0_60px_-10px_rgba(139,92,246,0.3)]",
-            "animate-[scale-fade-in_300ms_ease-out]",
+            "shadow-[0_0_60px_-12px_rgba(45,212,191,0.25)]",
+            "motion-safe:animate-[scale-fade-in_300ms_ease-out] motion-reduce:animate-none",
             sizeMap[size],
             className
           )}
           {...props}
         >
-          {/* Gradient top border */}
           <div
             aria-hidden
-            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/60 to-transparent"
+            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/55 to-transparent"
           />
 
-          {/* Close button */}
           <button
+            type="button"
             onClick={onClose}
             aria-label="Close modal"
-            className="absolute right-4 top-4 z-20 grid size-8 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white/60 transition hover:bg-white/[0.08] hover:text-white"
+            className="absolute right-4 top-4 z-20 grid size-8 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white/60 transition duration-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
               <path
                 d="M1 1l12 12M13 1L1 13"
                 stroke="currentColor"
@@ -158,13 +164,13 @@ export const GlassModal = forwardRef<HTMLDivElement, GlassModalProps>(
             {title && (
               <h2
                 id="glass-modal-title"
-                className="text-xl font-semibold tracking-tight sm:text-2xl"
+                className="pr-10 text-xl font-semibold tracking-tight text-white sm:text-2xl"
               >
                 {title}
               </h2>
             )}
             {description && (
-              <p id="glass-modal-desc" className="mt-2 text-sm text-white/60">
+              <p id="glass-modal-desc" className="mt-2 text-sm text-white/55">
                 {description}
               </p>
             )}

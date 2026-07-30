@@ -2,6 +2,7 @@
 
 import { forwardRef, useState, type ImgHTMLAttributes } from "react";
 import { cn } from "../utils/cn";
+import { usePrefersReducedMotion } from "../utils/motion";
 
 export type GlowAvatarSize = "sm" | "md" | "lg" | "xl";
 
@@ -35,7 +36,7 @@ export const GlowAvatar = forwardRef<HTMLDivElement, GlowAvatarProps>(
       src,
       alt = "",
       size = "md",
-      glowColor = "#7c3aed",
+      glowColor = "#7c6af5",
       fallback,
       animated = true,
       clipGlow = false,
@@ -45,6 +46,8 @@ export const GlowAvatar = forwardRef<HTMLDivElement, GlowAvatarProps>(
     ref
   ) => {
     const [imgError, setImgError] = useState(false);
+    const reduced = usePrefersReducedMotion();
+    const shouldAnimate = animated && !reduced;
     const initials =
       fallback ??
       alt
@@ -63,13 +66,13 @@ export const GlowAvatar = forwardRef<HTMLDivElement, GlowAvatarProps>(
           className
         )}
       >
-        {/* Glow ring */}
         <div
           aria-hidden
           className={cn(
-            "absolute rounded-full opacity-60 blur-[6px] transition-opacity duration-500",
+            "absolute rounded-full opacity-50 blur-[6px] transition-opacity duration-500",
             clipGlow ? "inset-0" : "inset-[-3px]",
-            animated && "[animation:pulse-slow_4s_ease-in-out_infinite]"
+            shouldAnimate &&
+              "motion-safe:[animation:nebula-pulse-soft_4s_ease-in-out_infinite]"
           )}
           style={{ background: glowColor }}
         />
@@ -84,10 +87,9 @@ export const GlowAvatar = forwardRef<HTMLDivElement, GlowAvatarProps>(
           }}
         />
 
-        {/* Avatar content */}
         <div
           className={cn(
-            "relative flex items-center justify-center overflow-hidden rounded-full bg-[#0a0a14]",
+            "relative flex items-center justify-center overflow-hidden rounded-full border border-white/10 bg-[#0c0c16]",
             sizeMap[size]
           )}
         >

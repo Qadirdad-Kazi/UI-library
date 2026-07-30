@@ -79,6 +79,38 @@ export type {
   ToastOptions,
 } from "./components/toast";
 
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/tabs";
+export type {
+  TabsProps,
+  TabsTriggerProps,
+  TabsContentProps,
+} from "./components/tabs";
+
+export { Alert } from "./components/alert";
+export type { AlertProps, AlertVariant } from "./components/alert";
+
+export { Sheet } from "./components/sheet";
+export type { SheetProps, SheetSide } from "./components/sheet";
+
+export { MagneticButton } from "./components/magnetic-button";
+export type { MagneticButtonProps } from "./components/magnetic-button";
+
+export { FormField } from "./components/form-field";
+export type { FormFieldProps } from "./components/form-field";
+
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "./components/accordion";
+export type {
+  AccordionProps,
+  AccordionItemProps,
+  AccordionTriggerProps,
+  AccordionContentProps,
+} from "./components/accordion";
+
 // ─── Sections ────────────────────────────────────────────────────────────────
 
 export { HeroAurora } from "./sections/hero-aurora";
@@ -233,3 +265,7 @@ export { cn } from "./utils/cn";
 
 export { CompactModeProvider, useCompactMode } from "./utils/compact-context";
 export type { SectionDensityProps } from "./utils/section";
+
+export { usePrefersReducedMotion, useInView } from "./utils/motion";
+
+export { Slot } from "./utils/slot";

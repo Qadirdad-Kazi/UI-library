@@ -13,6 +13,8 @@ import {
 import { GlowCard } from "../components/glow-card";
 import { ShimmerBadge } from "../components/shimmer-badge";
 
+const DEFAULT_GLOW = "#2dd4bf";
+
 export interface FeaturesBentoFeature {
   title: string;
   description: string;
@@ -42,24 +44,33 @@ export function FeaturesBento({
 
   return (
     <section className={cn("relative", sectionPadding(compact), className)}>
-      {/* Background ambient glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[400px] max-w-3xl"
+        className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[380px] max-w-3xl"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 70%)",
+            "radial-gradient(ellipse at 50% 0%, rgba(45,212,191,0.12) 0%, transparent 70%)",
         }}
       />
 
       <div className={sectionInset(compact)}>
         <div className="mx-auto max-w-2xl text-center">
-          {eyebrow && <ShimmerBadge tone="cyan">{eyebrow}</ShimmerBadge>}
-          <h2 className={cn("mt-4 text-balance", sectionHeading(compact))}>
+          {eyebrow && <ShimmerBadge tone="teal">{eyebrow}</ShimmerBadge>}
+          <h2
+            className={cn(
+              "mt-4 text-balance text-white",
+              sectionHeading(compact)
+            )}
+          >
             {title}
           </h2>
           {description && (
-            <p className={cn("mt-4 text-balance text-white/60", sectionSubheading(compact))}>
+            <p
+              className={cn(
+                "mt-4 text-balance text-white/55",
+                sectionSubheading(compact)
+              )}
+            >
               {description}
             </p>
           )}
@@ -73,49 +84,55 @@ export function FeaturesBento({
               : "grid-cols-1 gap-5 md:grid-cols-3"
           )}
         >
-          {features.map((f, idx) => (
-            <GlowCard
-              key={idx}
-              glowColor={f.glowColor ?? "#7c3aed"}
-              className={cn(
-                "flex h-full flex-col gap-4",
-                !compact && "min-h-[200px]",
-                f.span === "wide" && (compact ? "sm:col-span-2" : "md:col-span-2")
-              )}
-            >
-              {f.icon && (
-                <div
-                  className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-white/10 backdrop-blur"
-                  style={{
-                    color: f.glowColor ?? "#a78bfa",
-                    background: `linear-gradient(135deg, ${f.glowColor ?? "#7c3aed"}22, ${f.glowColor ?? "#7c3aed"}08)`,
-                    boxShadow: `0 0 20px -6px ${f.glowColor ?? "#7c3aed"}66`,
-                  }}
-                >
-                  {f.icon}
+          {features.map((f, idx) => {
+            const glow = f.glowColor ?? DEFAULT_GLOW;
+            return (
+              <GlowCard
+                key={idx}
+                glowColor={glow}
+                className={cn(
+                  "group flex h-full flex-col gap-4 transition duration-300",
+                  !compact && "min-h-[200px]",
+                  f.span === "wide" &&
+                    (compact ? "sm:col-span-2" : "md:col-span-2")
+                )}
+              >
+                {f.icon && (
+                  <div
+                    className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-white/10 backdrop-blur transition duration-300 group-hover:border-white/20"
+                    style={{
+                      color: glow,
+                      background: `linear-gradient(135deg, ${glow}22, ${glow}08)`,
+                      boxShadow: `0 0 20px -6px ${glow}55`,
+                    }}
+                  >
+                    {f.icon}
+                  </div>
+                )}
+                <div className="flex flex-col gap-2">
+                  <h3
+                    className={cn(
+                      "font-semibold tracking-tight text-white",
+                      compact ? "text-base" : "text-xl"
+                    )}
+                  >
+                    {f.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-white/55">
+                    {f.description}
+                  </p>
                 </div>
-              )}
-              <div className="flex flex-col gap-2">
-                <h3
-                  className={cn(
-                    "font-semibold tracking-tight",
-                    compact ? "text-base" : "text-xl"
-                  )}
-                >
-                  {f.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-white/55">{f.description}</p>
-              </div>
 
-              {/* Accent line at bottom */}
-              <div
-                className="mt-auto h-px w-16 rounded-full opacity-50"
-                style={{
-                  background: `linear-gradient(90deg, ${f.glowColor ?? "#7c3aed"}, transparent)`,
-                }}
-              />
-            </GlowCard>
-          ))}
+                <div
+                  aria-hidden
+                  className="mt-auto h-px w-16 rounded-full opacity-45 transition-all duration-300 group-hover:w-24 group-hover:opacity-70"
+                  style={{
+                    background: `linear-gradient(90deg, ${glow}, transparent)`,
+                  }}
+                />
+              </GlowCard>
+            );
+          })}
         </div>
       </div>
     </section>

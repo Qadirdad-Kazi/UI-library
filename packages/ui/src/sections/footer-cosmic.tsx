@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, type FormEvent } from "react";
 import { useCompactMode } from "../utils/compact-context";
 import { cn } from "../utils/cn";
 import { sectionInset, type SectionDensityProps } from "../utils/section";
@@ -18,6 +18,7 @@ export interface FooterCosmicProps extends SectionDensityProps {
   columns?: FooterColumn[];
   socials?: { label: string; href: string; icon: ReactNode }[];
   newsletter?: { title: string; description?: string; cta?: string };
+  onNewsletterSubmit?: (email: string) => void;
   copyright?: ReactNode;
   className?: string;
 }
@@ -28,58 +29,80 @@ export function FooterCosmic({
   columns = [],
   socials = [],
   newsletter,
+  onNewsletterSubmit,
   copyright,
   compact: compactProp,
   className,
 }: FooterCosmicProps) {
   const compact = useCompactMode(compactProp);
 
+  const handleNewsletter = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    onNewsletterSubmit?.(String(data.get("email") ?? ""));
+  };
+
   return (
     <footer
       className={cn(
-        "relative overflow-hidden border-t border-white/10 bg-[var(--color-bg,#05050a)]",
+        "relative overflow-hidden border-t border-white/10 bg-[var(--color-bg,#06060d)]",
         className
       )}
     >
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/60 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/50 to-transparent"
       />
       {!compact && (
         <div
           aria-hidden
-          className="absolute -top-32 left-1/2 size-[600px] -translate-x-1/2 rounded-full bg-violet-500/10 blur-[120px]"
+          className="absolute -top-32 left-1/2 size-[560px] -translate-x-1/2 rounded-full bg-teal-500/8 blur-[120px]"
         />
       )}
 
-      <div className={cn("relative", sectionInset(compact), compact ? "py-8" : "py-16")}>
-        <div className={cn("grid gap-12", !compact && "lg:grid-cols-[1.4fr_2fr]")}>
+      <div
+        className={cn(
+          "relative",
+          sectionInset(compact),
+          compact ? "py-8" : "py-16"
+        )}
+      >
+        <div
+          className={cn("grid gap-12", !compact && "lg:grid-cols-[1.4fr_2fr]")}
+        >
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <span
                 aria-hidden
-                className="grid size-9 place-items-center rounded-lg bg-[conic-gradient(from_0deg,#7c3aed,#22d3ee,#ec4899,#7c3aed)]"
+                className="grid size-9 place-items-center rounded-lg bg-[conic-gradient(from_0deg,#2dd4bf,#67e8f9,#a78bfa,#2dd4bf)]"
               >
-                <span className="size-3 rounded-sm bg-[var(--color-bg,#05050a)]" />
+                <span className="size-3 rounded-sm bg-[var(--color-bg,#06060d)]" />
               </span>
-              <span className="text-xl font-semibold tracking-tight">{brand}</span>
+              <span className="text-xl font-semibold tracking-tight text-white">
+                {brand}
+              </span>
             </div>
-            <p className="mt-4 max-w-sm text-sm text-white/60">{tagline}</p>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/55">
+              {tagline}
+            </p>
 
             {!compact && newsletter && (
-              <form className="mt-8 max-w-md">
-                <h4 className="text-sm font-semibold">{newsletter.title}</h4>
+              <form className="mt-8 max-w-md" onSubmit={handleNewsletter}>
+                <h4 className="text-sm font-semibold text-white">
+                  {newsletter.title}
+                </h4>
                 {newsletter.description && (
-                  <p className="mt-1 text-xs text-white/50">
+                  <p className="mt-1.5 text-xs text-white/45">
                     {newsletter.description}
                   </p>
                 )}
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start">
                   <NeonInput
                     name="email"
                     type="email"
+                    required
                     placeholder="you@nebula.dev"
-                    accent="violet"
+                    accent="teal"
                     className="flex-1"
                   />
                   <GradientButton type="submit" variant="aurora" size="md">
@@ -97,12 +120,12 @@ export function FooterCosmic({
                   <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">
                     {col.title}
                   </h4>
-                  <ul className="mt-4 space-y-2 text-sm text-white/70">
+                  <ul className="mt-4 space-y-2.5 text-sm text-white/65">
                     {col.links.map((l) => (
                       <li key={l.label}>
                         <a
                           href={l.href}
-                          className="transition hover:text-white"
+                          className="transition duration-300 hover:text-teal-200"
                         >
                           {l.label}
                         </a>
@@ -118,7 +141,7 @@ export function FooterCosmic({
         <div
           className={cn(
             "flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center",
-            !compact && "mt-14"
+            compact ? "mt-8" : "mt-14"
           )}
         >
           <p className="text-xs text-white/40">{copyright}</p>
@@ -129,7 +152,7 @@ export function FooterCosmic({
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
+                  className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-white/65 transition duration-300 hover:border-teal-400/30 hover:bg-white/[0.06] hover:text-white"
                 >
                   {s.icon}
                 </a>

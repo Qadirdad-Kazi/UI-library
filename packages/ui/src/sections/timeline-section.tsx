@@ -11,6 +11,7 @@ import {
   sectionSubheading,
   type SectionDensityProps,
 } from "../utils/section";
+import { ShimmerBadge } from "../components/shimmer-badge";
 
 export interface TimelineEvent {
   date: string;
@@ -20,6 +21,7 @@ export interface TimelineEvent {
 }
 
 export interface TimelineSectionProps extends SectionDensityProps {
+  eyebrow?: ReactNode;
   title?: ReactNode;
   description?: ReactNode;
   events: TimelineEvent[];
@@ -27,6 +29,7 @@ export interface TimelineSectionProps extends SectionDensityProps {
 }
 
 export function TimelineSection({
+  eyebrow,
   title = "Our journey",
   description,
   events,
@@ -36,27 +39,49 @@ export function TimelineSection({
   const compact = useCompactMode(compactProp);
 
   return (
-    <section className={cn(sectionPadding(compact), className)}>
+    <section className={cn("relative", sectionPadding(compact), className)}>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[320px] max-w-2xl"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 0%, rgba(124,106,245,0.1) 0%, transparent 70%)",
+        }}
+      />
+
       <div className={sectionInset(compact, "max-w-3xl")}>
-        {(title || description) && (
+        {(eyebrow || title || description) && (
           <div className={cn("text-center", sectionBlockGap(compact))}>
+            {eyebrow && <ShimmerBadge tone="violet">{eyebrow}</ShimmerBadge>}
             {title && (
-              <h2 className={sectionHeading(compact)}>
+              <h2
+                className={cn(
+                  "text-balance text-white",
+                  eyebrow ? "mt-4" : "",
+                  sectionHeading(compact)
+                )}
+              >
                 {title}
               </h2>
             )}
             {description && (
-              <p className={cn("mt-4", sectionSubheading(compact))}>{description}</p>
+              <p
+                className={cn(
+                  "mt-4 text-balance text-white/55",
+                  sectionSubheading(compact)
+                )}
+              >
+                {description}
+              </p>
             )}
           </div>
         )}
 
         <div className="relative">
-          {/* Vertical line */}
           <div
             aria-hidden
             className={cn(
-              "absolute left-6 top-0 h-full w-px bg-gradient-to-b from-violet-500/40 via-white/10 to-transparent",
+              "absolute left-6 top-0 h-full w-px bg-gradient-to-b from-[#7c6af5]/40 via-white/10 to-transparent",
               !compact && "md:left-1/2"
             )}
           />
@@ -64,7 +89,7 @@ export function TimelineSection({
           <div className={cn("flex flex-col", compact ? "gap-8" : "gap-12")}>
             {events.map((event, i) => {
               const isEven = i % 2 === 0;
-              const accent = event.accent ?? "#7c3aed";
+              const accent = event.accent ?? (i % 2 === 0 ? "#7c6af5" : "#2dd4bf");
 
               return (
                 <div
@@ -72,18 +97,18 @@ export function TimelineSection({
                   className={cn(
                     "relative flex items-start gap-6",
                     !compact && "md:gap-0",
-                    !compact && (isEven ? "md:flex-row" : "md:flex-row-reverse")
+                    !compact &&
+                      (isEven ? "md:flex-row" : "md:flex-row-reverse")
                   )}
                 >
-                  {/* Dot */}
                   <div
                     className={cn(
-                      "absolute left-6 top-1 z-10",
-                      !compact && "md:left-1/2 md:-translate-x-1/2"
+                      "absolute left-6 top-1 z-10 -translate-x-1/2",
+                      !compact && "md:left-1/2"
                     )}
                   >
                     <div
-                      className="size-3 rounded-full"
+                      className="size-3 rounded-full ring-4 ring-[#06060d]"
                       style={{
                         background: accent,
                         boxShadow: `0 0 16px -2px ${accent}`,
@@ -91,14 +116,12 @@ export function TimelineSection({
                     />
                   </div>
 
-                  {/* Spacer for mobile */}
                   <div className={cn("w-12 shrink-0", !compact && "md:hidden")} />
 
-                  {/* Content */}
                   <div
                     className={cn(
-                      "flex-1",
-                      !compact && "md:w-1/2",
+                      "flex-1 rounded-xl border border-white/10 bg-white/[0.02] p-4 backdrop-blur-sm transition-colors duration-300 hover:border-white/15 hover:bg-white/[0.04]",
+                      !compact && "md:w-1/2 md:border-0 md:bg-transparent md:p-0 md:hover:bg-transparent",
                       !compact && (isEven ? "md:pr-12 md:text-right" : "md:pl-12")
                     )}
                   >
@@ -108,18 +131,19 @@ export function TimelineSection({
                     >
                       {event.date}
                     </span>
-                    <h3 className="mt-1 text-lg font-semibold">
+                    <h3 className="mt-1 text-lg font-semibold text-white">
                       {event.title}
                     </h3>
                     {event.description && (
-                      <p className="mt-2 text-sm leading-relaxed text-white/60">
+                      <p className="mt-2 text-sm leading-relaxed text-white/55">
                         {event.description}
                       </p>
                     )}
                   </div>
 
-                  {/* Hidden spacer on desktop for the other side */}
-                  {!compact && <div className="hidden flex-1 md:block md:w-1/2" />}
+                  {!compact && (
+                    <div className="hidden flex-1 md:block md:w-1/2" />
+                  )}
                 </div>
               );
             })}

@@ -7,7 +7,7 @@ export async function CodeBlock({
   filename,
 }: {
   code: string;
-  lang?: "tsx" | "bash" | "ts";
+  lang?: "tsx" | "bash" | "ts" | "css";
   filename?: string;
 }) {
   const html = await highlight(code, lang);

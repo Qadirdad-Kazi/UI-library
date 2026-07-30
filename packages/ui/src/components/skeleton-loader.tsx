@@ -29,7 +29,7 @@ export const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
       "relative overflow-hidden bg-white/[0.06]",
       "after:absolute after:inset-0 after:-translate-x-full",
       "after:bg-gradient-to-r after:from-transparent after:via-white/[0.08] after:to-transparent",
-      "after:[animation:shimmer_2s_ease-in-out_infinite]"
+      "motion-safe:after:[animation:nebula-shimmer_2s_ease-in-out_infinite] motion-reduce:after:animate-none"
     );
 
     const variantClasses = {
@@ -40,14 +40,21 @@ export const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
 
     if (variant === "text" && count > 1) {
       return (
-        <div ref={ref} className={cn("flex flex-col gap-3", className)} {...props}>
+        <div
+          ref={ref}
+          className={cn("flex flex-col gap-3", className)}
+          aria-busy="true"
+          aria-live="polite"
+          {...props}
+        >
           {Array.from({ length: count }).map((_, i) => (
             <div
               key={i}
+              aria-hidden="true"
               className={cn(
                 baseClasses,
                 variantClasses.text,
-                i === count - 1 && "w-3/4" // last line shorter
+                i === count - 1 && "w-3/4"
               )}
               style={{ width: i < count - 1 ? width : undefined, height }}
             />
@@ -59,6 +66,9 @@ export const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
     return (
       <div
         ref={ref}
+        aria-busy="true"
+        aria-live="polite"
+        aria-hidden="true"
         className={cn(baseClasses, variantClasses[variant], className)}
         style={{
           width: width ?? (variant === "circular" ? 40 : undefined),

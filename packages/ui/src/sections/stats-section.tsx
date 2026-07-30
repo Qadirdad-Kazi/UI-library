@@ -12,6 +12,7 @@ import {
   type SectionDensityProps,
 } from "../utils/section";
 import { AnimatedCounter } from "../components/animated-counter";
+import { ShimmerBadge } from "../components/shimmer-badge";
 
 export interface StatItem {
   value: number;
@@ -22,6 +23,7 @@ export interface StatItem {
 }
 
 export interface StatsSectionProps extends SectionDensityProps {
+  eyebrow?: ReactNode;
   title?: ReactNode;
   description?: ReactNode;
   stats: StatItem[];
@@ -29,6 +31,7 @@ export interface StatsSectionProps extends SectionDensityProps {
 }
 
 export function StatsSection({
+  eyebrow,
   title,
   description,
   stats,
@@ -38,17 +41,45 @@ export function StatsSection({
   const compact = useCompactMode(compactProp);
 
   return (
-    <section className={cn(sectionPadding(compact), className)}>
+    <section className={cn("relative", sectionPadding(compact), className)}>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[320px] max-w-3xl"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 0%, rgba(45,212,191,0.1) 0%, transparent 70%)",
+        }}
+      />
+
       <div className={sectionInset(compact)}>
-        {(title || description) && (
-          <div className={cn("text-center", compact ? "mb-6" : sectionBlockGap(compact))}>
+        {(eyebrow || title || description) && (
+          <div
+            className={cn(
+              "mx-auto max-w-2xl text-center",
+              compact ? "mb-6" : sectionBlockGap(compact)
+            )}
+          >
+            {eyebrow && <ShimmerBadge tone="teal">{eyebrow}</ShimmerBadge>}
             {title && (
-              <h2 className={sectionHeading(compact)}>
+              <h2
+                className={cn(
+                  "text-balance text-white",
+                  eyebrow ? "mt-4" : "",
+                  sectionHeading(compact)
+                )}
+              >
                 {title}
               </h2>
             )}
             {description && (
-              <p className={cn("mt-4", sectionSubheading(compact))}>{description}</p>
+              <p
+                className={cn(
+                  "mt-4 text-balance text-white/55",
+                  sectionSubheading(compact)
+                )}
+              >
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -56,30 +87,31 @@ export function StatsSection({
         <div
           className={cn(
             "grid gap-6",
-            compact ? "grid-cols-1 min-[400px]:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+            compact
+              ? "grid-cols-1 min-[400px]:grid-cols-2"
+              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
           )}
         >
           {stats.map((stat) => (
             <div
               key={stat.label}
               className={cn(
-                "group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] text-center transition hover:border-white/15 hover:bg-white/[0.04]",
+                "group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-center backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04]",
                 compact ? "p-5" : "p-8"
               )}
             >
-              {/* Hover glow */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 style={{
                   background:
-                    "radial-gradient(200px circle at 50% 50%, rgba(139,92,246,0.15), transparent 60%)",
+                    "radial-gradient(200px circle at 50% 50%, rgba(45,212,191,0.12), transparent 60%)",
                 }}
               />
               <div className="relative">
                 <div
                   className={cn(
-                    "font-bold tracking-tight",
+                    "bg-[linear-gradient(135deg,#fff_30%,#2dd4bf)] bg-clip-text font-bold tracking-tight text-transparent",
                     compact ? "text-3xl" : "text-5xl"
                   )}
                 >
@@ -91,7 +123,7 @@ export function StatsSection({
                     triggerOnScroll={!compact}
                   />
                 </div>
-                <div className="mt-2 text-sm uppercase tracking-[0.18em] text-white/45">
+                <div className="mt-2 text-sm uppercase tracking-[0.18em] text-white/55">
                   {stat.label}
                 </div>
               </div>

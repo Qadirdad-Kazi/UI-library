@@ -2,6 +2,7 @@
 
 import { useState, useEffect, type HTMLAttributes } from "react";
 import { cn } from "../utils/cn";
+import { usePrefersReducedMotion } from "../utils/motion";
 
 export interface WordRotatorProps extends HTMLAttributes<HTMLSpanElement> {
   words: string[];
@@ -16,8 +17,11 @@ export function WordRotator({
 }: WordRotatorProps) {
   const [index, setIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
+    if (reduced || words.length <= 1) return;
+
     const timer = setInterval(() => {
       setIsAnimating(true);
       setTimeout(() => {
@@ -27,19 +31,25 @@ export function WordRotator({
     }, interval);
 
     return () => clearInterval(timer);
-  }, [words.length, interval]);
+  }, [words.length, interval, reduced]);
 
   return (
     <span
-      className={cn("relative inline-block overflow-hidden", className)}
+      className={cn(
+        "relative inline-block overflow-hidden align-bottom",
+        className
+      )}
+      aria-live="polite"
+      aria-atomic="true"
       {...props}
     >
       <span
         className={cn(
-          "inline-block transition-all duration-300 ease-out",
-          isAnimating
-            ? "-translate-y-full opacity-0"
-            : "translate-y-0 opacity-100"
+          "inline-block bg-[linear-gradient(110deg,#7c6af5,#2dd4bf)] bg-clip-text text-transparent transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          !reduced &&
+            (isAnimating
+              ? "-translate-y-full opacity-0"
+              : "translate-y-0 opacity-100")
         )}
       >
         {words[index]}

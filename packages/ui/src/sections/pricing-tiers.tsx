@@ -34,7 +34,7 @@ export interface PricingTiersProps extends SectionDensityProps {
 
 function Check() {
   return (
-    <span className="grid size-5 shrink-0 place-items-center rounded-full border border-emerald-400/40 bg-emerald-400/10 text-emerald-300">
+    <span className="grid size-5 shrink-0 place-items-center rounded-full border border-teal-400/35 bg-teal-400/10 text-teal-300">
       <svg
         viewBox="0 0 16 16"
         className="size-3"
@@ -66,14 +66,24 @@ export function PricingTiers({
     <section className={cn("relative", sectionPadding(compact), className)}>
       <div className={sectionInset(compact)}>
         <div className="mx-auto max-w-2xl text-center">
-          {eyebrow && <ShimmerBadge tone="violet">{eyebrow}</ShimmerBadge>}
+          {eyebrow && <ShimmerBadge tone="teal">{eyebrow}</ShimmerBadge>}
           {title && (
-            <h2 className={cn("mt-4 text-balance", sectionHeading(compact))}>
+            <h2
+              className={cn(
+                "mt-4 text-balance text-white",
+                sectionHeading(compact)
+              )}
+            >
               {title}
             </h2>
           )}
           {description && (
-            <p className={cn("mt-4 text-balance", sectionSubheading(compact))}>
+            <p
+              className={cn(
+                "mt-4 text-balance text-white/55",
+                sectionSubheading(compact)
+              )}
+            >
               {description}
             </p>
           )}
@@ -83,40 +93,44 @@ export function PricingTiers({
           className={cn(
             "grid gap-6",
             sectionGridGap(compact),
-            compact ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 md:grid-cols-3"
+            compact
+              ? "grid-cols-1 sm:grid-cols-2"
+              : "grid-cols-1 md:grid-cols-3"
           )}
         >
           {tiers.map((tier) => (
             <div
               key={tier.name}
               className={cn(
-                "relative flex flex-col overflow-hidden rounded-2xl border backdrop-blur-xl transition",
+                "relative flex flex-col overflow-hidden rounded-2xl border backdrop-blur-xl transition duration-300",
                 compact ? "p-5" : "p-7",
                 tier.featured
-                  ? "border-violet-400/40 bg-[radial-gradient(ellipse_at_top,rgba(124,58,237,0.18),transparent_60%)] shadow-[0_0_60px_-15px_rgba(124,58,237,0.6)]"
-                  : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                  ? "border-teal-400/35 bg-[radial-gradient(ellipse_at_top,rgba(45,212,191,0.16),transparent_60%)] shadow-[0_0_60px_-18px_rgba(45,212,191,0.45)]"
+                  : "border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.035]"
               )}
             >
               {tier.featured && (
                 <div className="absolute right-5 top-5">
-                  <ShimmerBadge tone="violet">Most popular</ShimmerBadge>
+                  <ShimmerBadge tone="teal">Most popular</ShimmerBadge>
                 </div>
               )}
-              <h3 className="text-lg font-semibold tracking-tight">{tier.name}</h3>
+              <h3 className="text-lg font-semibold tracking-tight text-white">
+                {tier.name}
+              </h3>
               {tier.description && (
-                <p className="mt-1 text-sm text-white/60">{tier.description}</p>
+                <p className="mt-1.5 text-sm text-white/55">{tier.description}</p>
               )}
               <div className="mt-6 flex items-end gap-1">
                 <span
                   className={cn(
-                    "font-semibold tracking-tight",
+                    "font-semibold tracking-tight text-white tabular-nums",
                     compact ? "text-3xl" : "text-5xl"
                   )}
                 >
                   {tier.price}
                 </span>
                 {tier.period && (
-                  <span className="pb-2 text-sm text-white/50">{tier.period}</span>
+                  <span className="pb-2 text-sm text-white/45">{tier.period}</span>
                 )}
               </div>
               <ul className="mt-6 space-y-3 text-sm text-white/70">
@@ -129,21 +143,27 @@ export function PricingTiers({
               </ul>
               <div className="mt-8 pt-2">
                 {tier.featured ? (
-                  <a href={tier.cta.href} onClick={tier.cta.onClick}>
-                    <GradientButton
-                      variant="aurora"
-                      size={compact ? "sm" : "md"}
-                      className="w-full"
-                    >
-                      {tier.cta.label}
-                    </GradientButton>
-                  </a>
+                  <GradientButton
+                    asChild={Boolean(tier.cta.href)}
+                    variant="aurora"
+                    size={compact ? "sm" : "md"}
+                    className="w-full"
+                    onClick={tier.cta.href ? undefined : tier.cta.onClick}
+                  >
+                    {tier.cta.href ? (
+                      <a href={tier.cta.href} onClick={tier.cta.onClick}>
+                        {tier.cta.label}
+                      </a>
+                    ) : (
+                      tier.cta.label
+                    )}
+                  </GradientButton>
                 ) : (
                   <a
                     href={tier.cta.href}
                     onClick={tier.cta.onClick}
                     className={cn(
-                      "inline-flex w-full items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-sm font-medium text-white/90 transition hover:border-white/30 hover:bg-white/[0.06]",
+                      "inline-flex w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-sm font-medium text-white/90 transition duration-300 hover:border-teal-400/30 hover:bg-white/[0.06]",
                       compact ? "h-9 px-4" : "h-11 px-6"
                     )}
                   >

@@ -356,6 +356,67 @@ export const COMPONENTS: ComponentRegistryEntry[] = [
     importStatement: 'import { RainbowButton } from "@nebula/ui";',
     installCommand: "npm install @nebula/ui",
   },
+  {
+    slug: "tabs",
+    name: "Tabs",
+    category: "primitives",
+    tagline: "Accessible tabbed panels",
+    description:
+      "Composable Tabs, TabsList, TabsTrigger, and TabsContent with ARIA roles and smooth panel transitions.",
+    importStatement: 'import { Tabs, TabsList, TabsTrigger, TabsContent } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
+  {
+    slug: "alert",
+    name: "Alert",
+    category: "primitives",
+    tagline: "Inline status banners",
+    description:
+      "Dismissible alert banners for info, success, warning, and error feedback outside of toasts.",
+    importStatement: 'import { Alert } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
+  {
+    slug: "sheet",
+    name: "Sheet",
+    category: "primitives",
+    tagline: "Slide-over drawer panel",
+    description:
+      "Accessible sheet/drawer with focus trap, escape to close, focus restore, and left/right/bottom sides.",
+    importStatement: 'import { Sheet } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
+  {
+    slug: "magnetic-button",
+    name: "Magnetic Button",
+    category: "primitives",
+    tagline: "Cursor-magnetized CTA",
+    description:
+      "A glass button that gently follows the cursor for playful, premium micro-interactions.",
+    importStatement: 'import { MagneticButton } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
+  {
+    slug: "form-field",
+    name: "Form Field",
+    category: "primitives",
+    tagline: "Unified label, hint, and error layout",
+    description:
+      "Layout wrapper that standardizes labels, hints, and error messaging around any form control.",
+    importStatement: 'import { FormField } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
+  {
+    slug: "accordion",
+    name: "Accordion",
+    category: "primitives",
+    tagline: "Composable disclosure panels",
+    description:
+      "Primitive accordion building blocks for single or multiple open items with smooth expand transitions.",
+    importStatement:
+      'import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@nebula/ui";',
+    installCommand: "npm install @nebula/ui",
+  },
   // ── Sections ─────────────────────────────────
   {
     slug: "hero-aurora",

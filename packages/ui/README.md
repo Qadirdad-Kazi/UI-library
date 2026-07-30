@@ -1,6 +1,6 @@
 # @nebula/ui
 
-A cinematic, AI-powered React component library.
+Production-ready cinematic React components — primitives, sections, backgrounds, and text animations.
 
 ## Install
 
@@ -8,35 +8,46 @@ A cinematic, AI-powered React component library.
 npm install @nebula/ui
 ```
 
-Add Tailwind CSS to your project, then in your global stylesheet:
-
 ```css
 @import "@nebula/ui/styles.css";
 ```
 
-## Use
+## Usage
 
 ```tsx
-import { GradientButton, GlowCard, NeonInput } from "@nebula/ui";
+import {
+  GradientButton,
+  GlowCard,
+  NeonInput,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  Alert,
+  Sheet,
+} from "@nebula/ui";
 
-export default function App() {
+export function Demo() {
   return (
-    <GlowCard glowColor="#7c3aed">
-      <h2>Hello, Nebula</h2>
-      <NeonInput label="Email" placeholder="you@nebula.dev" accent="violet" />
-      <GradientButton variant="aurora">Sign in</GradientButton>
+    <GlowCard glowColor="#2dd4bf" className="max-w-md space-y-4 p-6">
+      <Alert variant="info" title="Ready">
+        Import styles once, then compose freely.
+      </Alert>
+      <NeonInput label="Email" placeholder="you@company.com" accent="teal" />
+      <GradientButton variant="aurora" className="w-full">
+        Continue
+      </GradientButton>
     </GlowCard>
   );
 }
 ```
 
-## Components
+## Peer dependencies
 
-| Name             | Description                                                |
-| ---------------- | ---------------------------------------------------------- |
-| `GradientButton` | Animated gradient button with shimmer + glow               |
-| `GlowCard`       | Mouse-tracking spotlight card with gradient border         |
-| `NeonInput`      | Neon-glow form input with three accent colors              |
-| `ShimmerBadge`   | Shimmering pill badge for status / tags                    |
+- `react` >= 18
+- `react-dom` >= 18
+- Tailwind CSS v4 recommended for utility classes
 
-See full docs in the showcase site.
+## License
+
+MIT

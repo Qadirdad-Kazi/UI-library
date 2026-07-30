@@ -13,6 +13,8 @@ const FEATURED_SLUGS = [
   "hero-aurora",
   "features-bento",
   "pricing-tiers",
+  "tabs",
+  "sheet",
   "testimonial-marquee",
 ];
 
@@ -168,12 +170,12 @@ export function FeaturedComponents() {
                     {activeComponent.tagline}
                   </p>
                 </div>
-                <Link href={`/components/${active}`}>
-                  <GradientButton variant="aurora" size="md">
+                <GradientButton asChild variant="aurora" size="md">
+                  <Link href={`/components/${active}`}>
                     Open showcase
                     <ArrowRight className="size-4" />
-                  </GradientButton>
-                </Link>
+                  </Link>
+                </GradientButton>
               </div>
             )}
           </div>

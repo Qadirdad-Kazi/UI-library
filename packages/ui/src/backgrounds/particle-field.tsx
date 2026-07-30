@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type HTMLAttributes } from "react";
 import { cn } from "../utils/cn";
+import { usePrefersReducedMotion } from "../utils/motion";
 
 export interface ParticleFieldProps extends HTMLAttributes<HTMLCanvasElement> {
   particleCount?: number;
@@ -13,7 +14,7 @@ export interface ParticleFieldProps extends HTMLAttributes<HTMLCanvasElement> {
 
 export function ParticleField({
   particleCount = 80,
-  color = "#7c3aed",
+  color = "#7c6af5",
   speed = 0.5,
   interactive = true,
   maxDistance = 120,
@@ -22,6 +23,7 @@ export function ParticleField({
 }: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -62,17 +64,16 @@ export function ParticleField({
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
         ? `${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)}`
-        : "124,58,237";
+        : "124,106,245";
     };
 
     const rgb = hexToRgb(color);
 
-    const animate = () => {
+    const drawFrame = (animateMotion: boolean) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (const p of particles) {
-        // Mouse attraction
-        if (interactive) {
+        if (animateMotion && interactive) {
           const dx = mouseRef.current.x - p.x;
           const dy = mouseRef.current.y - p.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -82,25 +83,23 @@ export function ParticleField({
           }
         }
 
-        p.x += p.vx;
-        p.y += p.vy;
+        if (animateMotion) {
+          p.x += p.vx;
+          p.y += p.vy;
 
-        // Bounce off edges
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+          if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-        // Clamp
-        p.x = Math.max(0, Math.min(canvas.width, p.x));
-        p.y = Math.max(0, Math.min(canvas.height, p.y));
+          p.x = Math.max(0, Math.min(canvas.width, p.x));
+          p.y = Math.max(0, Math.min(canvas.height, p.y));
+        }
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${rgb}, 0.6)`;
+        ctx.fillStyle = `rgba(${rgb}, 0.55)`;
         ctx.fill();
       }
 
-      // Draw connections
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -108,7 +107,7 @@ export function ParticleField({
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < maxDistance) {
-            const opacity = (1 - dist / maxDistance) * 0.3;
+            const opacity = (1 - dist / maxDistance) * 0.28;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -118,7 +117,10 @@ export function ParticleField({
           }
         }
       }
+    };
 
+    const animate = () => {
+      drawFrame(true);
       animationId = requestAnimationFrame(animate);
     };
 
@@ -131,8 +133,18 @@ export function ParticleField({
     };
 
     init();
-    animate();
 
+    if (reduced) {
+      drawFrame(false);
+      const onResize = () => {
+        resize();
+        drawFrame(false);
+      };
+      window.addEventListener("resize", onResize);
+      return () => window.removeEventListener("resize", onResize);
+    }
+
+    animate();
     window.addEventListener("resize", resize);
     if (interactive) {
       canvas.addEventListener("mousemove", handleMouseMove);
@@ -143,13 +155,16 @@ export function ParticleField({
       window.removeEventListener("resize", resize);
       canvas.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [particleCount, color, speed, interactive, maxDistance]);
+  }, [particleCount, color, speed, interactive, maxDistance, reduced]);
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden
-      className={cn("pointer-events-auto absolute inset-0 size-full", className)}
+      className={cn(
+        "pointer-events-auto absolute inset-0 size-full",
+        className
+      )}
       {...props}
     />
   );

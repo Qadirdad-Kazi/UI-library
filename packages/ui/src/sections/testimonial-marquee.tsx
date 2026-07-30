@@ -26,32 +26,35 @@ export interface TestimonialMarqueeProps extends SectionDensityProps {
   className?: string;
   /** Seconds for one full loop. Default 40 */
   duration?: number;
+  pauseOnHover?: boolean;
 }
 
 function Card({ t, compact }: { t: Testimonial; compact?: boolean }) {
   return (
     <div
       className={cn(
-        "group/tcard relative shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur",
+        "group/tcard relative shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md transition duration-300 hover:border-white/20 hover:bg-white/[0.045]",
         compact ? "w-[260px] p-4" : "w-[340px] p-6"
       )}
     >
-      <p className="text-sm leading-relaxed text-white/80">&ldquo;{t.quote}&rdquo;</p>
+      <p className="text-sm leading-relaxed text-white/75">
+        &ldquo;{t.quote}&rdquo;
+      </p>
       <div className="mt-5 flex items-center gap-3">
         <span
           aria-hidden
           className="grid size-9 place-items-center rounded-full text-xs font-semibold text-white"
           style={{
             background: `linear-gradient(135deg, ${
-              t.avatarColor ?? "#7c3aed"
-            }, #22d3ee)`,
+              t.avatarColor ?? "#2dd4bf"
+            }, #67e8f9)`,
           }}
         >
           {t.author.charAt(0)}
         </span>
         <div>
           <div className="text-sm font-medium text-white">{t.author}</div>
-          {t.role && <div className="text-xs text-white/50">{t.role}</div>}
+          {t.role && <div className="text-xs text-white/45">{t.role}</div>}
         </div>
       </div>
     </div>
@@ -64,28 +67,59 @@ export function TestimonialMarquee({
   testimonials,
   className,
   duration = 40,
+  pauseOnHover = true,
   compact: compactProp,
 }: TestimonialMarqueeProps) {
   const compact = useCompactMode(compactProp);
   const half = Math.ceil(testimonials.length / 2);
   const rowA = testimonials.slice(0, half);
-  const rowB = testimonials.slice(half).length > 0 ? testimonials.slice(half) : rowA;
+  const rowB =
+    testimonials.slice(half).length > 0 ? testimonials.slice(half) : rowA;
 
   return (
-    <section className={cn("relative overflow-hidden", sectionPadding(compact), className)}>
-      <div className={cn(sectionInset(compact, "max-w-2xl"), "text-center", sectionBlockGap(compact))}>
-        {eyebrow && <ShimmerBadge tone="amber">{eyebrow}</ShimmerBadge>}
+    <section
+      className={cn(
+        "relative overflow-hidden",
+        sectionPadding(compact),
+        className
+      )}
+    >
+      <div
+        className={cn(
+          sectionInset(compact, "max-w-2xl"),
+          "text-center",
+          sectionBlockGap(compact)
+        )}
+      >
+        {eyebrow && <ShimmerBadge tone="teal">{eyebrow}</ShimmerBadge>}
         {title && (
-          <h2 className={cn("mt-4 text-balance", sectionHeading(compact))}>
+          <h2
+            className={cn(
+              "mt-4 text-balance text-white",
+              sectionHeading(compact)
+            )}
+          >
             {title}
           </h2>
         )}
       </div>
 
-      <div className="relative space-y-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <Row items={rowA} duration={duration} reverse={false} compact={compact} />
+      <div className="relative space-y-4 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        <Row
+          items={rowA}
+          duration={duration}
+          reverse={false}
+          compact={compact}
+          pauseOnHover={pauseOnHover}
+        />
         {!compact && (
-          <Row items={rowB} duration={duration * 1.2} reverse compact={compact} />
+          <Row
+            items={rowB}
+            duration={duration * 1.2}
+            reverse
+            compact={compact}
+            pauseOnHover={pauseOnHover}
+          />
         )}
       </div>
 
@@ -108,16 +142,24 @@ function Row({
   duration,
   reverse,
   compact,
+  pauseOnHover,
 }: {
   items: Testimonial[];
   duration: number;
   reverse: boolean;
   compact?: boolean;
+  pauseOnHover?: boolean;
 }) {
   return (
-    <div className="flex gap-4 overflow-hidden">
+    <div
+      className={cn(
+        "group/row flex gap-4 overflow-hidden",
+        pauseOnHover && "hover:[&>[data-marquee]]:[animation-play-state:paused]"
+      )}
+    >
       <div
-        className="flex shrink-0 gap-4"
+        data-marquee
+        className="flex shrink-0 gap-4 motion-reduce:[animation:none!important]"
         style={{
           animation: `${
             reverse ? "nebula-marquee-reverse" : "nebula-marquee"

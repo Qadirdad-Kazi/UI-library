@@ -13,6 +13,7 @@ import {
 } from "../utils/section";
 import { GlowCard } from "../components/glow-card";
 import { GlowAvatar } from "../components/glow-avatar";
+import { ShimmerBadge } from "../components/shimmer-badge";
 
 export interface TeamMember {
   name: string;
@@ -24,6 +25,7 @@ export interface TeamMember {
 }
 
 export interface TeamGridProps extends SectionDensityProps {
+  eyebrow?: ReactNode;
   title?: ReactNode;
   description?: ReactNode;
   members: TeamMember[];
@@ -44,6 +46,7 @@ const compactColClasses = {
 } as const;
 
 export function TeamGrid({
+  eyebrow,
   title = "Meet the team",
   description,
   members,
@@ -54,14 +57,37 @@ export function TeamGrid({
   const compact = useCompactMode(compactProp);
 
   return (
-    <section className={cn(sectionPadding(compact), className)}>
+    <section className={cn("relative", sectionPadding(compact), className)}>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[360px] max-w-3xl"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 0%, rgba(124,106,245,0.1) 0%, transparent 70%)",
+        }}
+      />
+
       <div className={sectionInset(compact)}>
-        <div className="text-center">
-          <h2 className={sectionHeading(compact)}>
+        <div className="mx-auto max-w-2xl text-center">
+          {eyebrow && <ShimmerBadge tone="violet">{eyebrow}</ShimmerBadge>}
+          <h2
+            className={cn(
+              "text-balance text-white",
+              eyebrow ? "mt-4" : "",
+              sectionHeading(compact)
+            )}
+          >
             {title}
           </h2>
           {description && (
-            <p className={cn("mt-4", sectionSubheading(compact))}>{description}</p>
+            <p
+              className={cn(
+                "mt-4 text-balance text-white/55",
+                sectionSubheading(compact)
+              )}
+            >
+              {description}
+            </p>
           )}
         </div>
 
@@ -75,7 +101,7 @@ export function TeamGrid({
           {members.map((member) => (
             <GlowCard
               key={member.name}
-              glowColor={member.glowColor ?? "#7c3aed"}
+              glowColor={member.glowColor ?? "#7c6af5"}
               intensity="low"
               className={cn(
                 "flex flex-col items-center text-center",
@@ -86,13 +112,15 @@ export function TeamGrid({
                 src={member.avatar}
                 alt={member.name}
                 size={compact ? "lg" : "xl"}
-                glowColor={member.glowColor ?? "#7c3aed"}
+                glowColor={member.glowColor ?? "#7c6af5"}
                 clipGlow={compact}
               />
-              <h3 className="mt-5 text-lg font-semibold">{member.name}</h3>
-              <p className="mt-1 text-sm text-white/50">{member.role}</p>
+              <h3 className="mt-5 text-lg font-semibold text-white">
+                {member.name}
+              </h3>
+              <p className="mt-1 text-sm text-white/55">{member.role}</p>
               {member.bio && (
-                <p className="mt-3 text-sm leading-relaxed text-white/60">
+                <p className="mt-3 text-sm leading-relaxed text-white/55">
                   {member.bio}
                 </p>
               )}
@@ -104,7 +132,7 @@ export function TeamGrid({
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="grid size-8 place-items-center rounded-lg border border-white/10 text-white/40 transition hover:bg-white/[0.06] hover:text-white"
+                      className="grid size-8 place-items-center rounded-lg border border-white/10 text-white/40 transition-colors duration-200 hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
                     >
                       {social.icon}
                     </a>

@@ -57,7 +57,13 @@ export function useToast(): ToastContextValue {
 export interface ToastProviderProps {
   children: ReactNode;
   /** Position of the toast stack */
-  position?: "top-right" | "top-left" | "bottom-right" | "bottom-left" | "top-center" | "bottom-center";
+  position?:
+    | "top-right"
+    | "top-left"
+    | "bottom-right"
+    | "bottom-left"
+    | "top-center"
+    | "bottom-center";
 }
 
 let toastCounter = 0;
@@ -98,6 +104,7 @@ export function ToastProvider({
       {children}
       <div
         aria-live="polite"
+        aria-relevant="additions"
         className={cn(
           "pointer-events-none fixed z-[10000] flex flex-col gap-3",
           positionClasses[position]
@@ -117,49 +124,74 @@ export function ToastProvider({
 
 const typeStyles: Record<
   ToastType,
-  { border: string; icon: string; glow: string }
+  { border: string; icon: string; glow: string; iconBg: string }
 > = {
   success: {
-    border: "border-emerald-400/40",
+    border: "border-emerald-400/35",
     icon: "text-emerald-400",
-    glow: "shadow-[0_0_30px_-6px_rgba(52,211,153,0.5)]",
+    iconBg: "bg-emerald-400/10",
+    glow: "shadow-[0_0_28px_-6px_rgba(52,211,153,0.45)]",
   },
   error: {
-    border: "border-red-400/40",
+    border: "border-red-400/35",
     icon: "text-red-400",
-    glow: "shadow-[0_0_30px_-6px_rgba(248,113,113,0.5)]",
+    iconBg: "bg-red-400/10",
+    glow: "shadow-[0_0_28px_-6px_rgba(248,113,113,0.45)]",
   },
   warning: {
-    border: "border-amber-400/40",
+    border: "border-amber-400/35",
     icon: "text-amber-400",
-    glow: "shadow-[0_0_30px_-6px_rgba(251,191,36,0.5)]",
+    iconBg: "bg-amber-400/10",
+    glow: "shadow-[0_0_28px_-6px_rgba(251,191,36,0.45)]",
   },
   info: {
-    border: "border-violet-400/40",
-    icon: "text-violet-400",
-    glow: "shadow-[0_0_30px_-6px_rgba(139,92,246,0.5)]",
+    border: "border-teal-400/35",
+    icon: "text-teal-300",
+    iconBg: "bg-teal-400/10",
+    glow: "shadow-[0_0_28px_-6px_rgba(45,212,191,0.45)]",
   },
 };
 
 const typeIcons: Record<ToastType, ReactNode> = {
   success: (
     <svg viewBox="0 0 16 16" fill="none" className="size-4">
-      <path d="M3 8.5l3 3 7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M3 8.5l3 3 7-7"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   ),
   error: (
     <svg viewBox="0 0 16 16" fill="none" className="size-4">
-      <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M4 4l8 8M12 4l-8 8"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   ),
   warning: (
     <svg viewBox="0 0 16 16" fill="none" className="size-4">
-      <path d="M8 4v5M8 11.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M8 4v5M8 11.5v.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   ),
   info: (
     <svg viewBox="0 0 16 16" fill="none" className="size-4">
-      <path d="M8 4.5v.5M8 7v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M8 4.5v.5M8 7v5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   ),
 };
@@ -183,30 +215,49 @@ function ToastCard({
 
   return (
     <div
-      role="alert"
+      role="status"
       className={cn(
-        "pointer-events-auto flex w-80 items-start gap-3 rounded-xl border bg-[#0a0a14]/95 p-4 backdrop-blur-xl",
-        "animate-[slide-in-right_300ms_ease-out]",
+        "pointer-events-auto flex w-80 items-start gap-3 rounded-xl border bg-[rgba(12,12,22,0.92)] p-4 backdrop-blur-xl",
+        "motion-safe:animate-[nebula-slide-in-right_300ms_var(--nebula-ease-out)_both]",
         styles.border,
         styles.glow
       )}
     >
-      <span className={cn("mt-0.5 shrink-0", styles.icon)}>
+      <span
+        className={cn(
+          "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg",
+          styles.iconBg,
+          styles.icon
+        )}
+      >
         {typeIcons[item.type]}
       </span>
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         {item.title && (
           <div className="text-sm font-semibold text-white">{item.title}</div>
         )}
-        <div className="text-sm text-white/70">{item.message}</div>
+        <div
+          className={cn(
+            "text-sm text-white/55",
+            item.title ? "mt-0.5" : "text-white/70"
+          )}
+        >
+          {item.message}
+        </div>
       </div>
       <button
+        type="button"
         onClick={() => onDismiss(item.id)}
-        className="shrink-0 rounded-md p-1 text-white/40 transition hover:bg-white/[0.06] hover:text-white"
+        className="shrink-0 rounded-md p-1 text-white/40 transition-colors hover:bg-white/[0.06] hover:text-white"
         aria-label="Dismiss"
       >
         <svg viewBox="0 0 14 14" fill="none" className="size-3.5">
-          <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <path
+            d="M1 1l12 12M13 1L1 13"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
       </button>
     </div>

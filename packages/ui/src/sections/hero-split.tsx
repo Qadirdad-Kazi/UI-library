@@ -53,15 +53,24 @@ export function HeroSplit({
       )}
     >
       <div
+        aria-hidden
         className={cn(
-          "absolute -left-40 top-1/4 rounded-full bg-violet-500/15 blur-[120px]",
-          compact ? "size-[240px]" : "size-[500px]"
+          "pointer-events-none absolute -left-40 top-1/4 rounded-full bg-teal-400/15 blur-[120px]",
+          compact ? "size-[220px]" : "size-[480px]"
         )}
       />
       <div
+        aria-hidden
         className={cn(
-          "absolute -right-40 bottom-0 rounded-full bg-cyan-500/15 blur-[120px]",
-          compact ? "size-[240px]" : "size-[500px]"
+          "pointer-events-none absolute -right-40 bottom-0 rounded-full bg-cyan-500/12 blur-[120px]",
+          compact ? "size-[220px]" : "size-[480px]"
+        )}
+      />
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute right-1/4 top-0 rounded-full bg-violet-500/8 blur-[100px]",
+          compact ? "hidden" : "size-[360px]"
         )}
       />
 
@@ -69,28 +78,38 @@ export function HeroSplit({
         className={cn(
           "relative z-10 grid w-full",
           sectionInset(compact),
-          compact ? "gap-6" : "gap-12 lg:grid-cols-2 lg:items-center"
+          compact ? "gap-6" : "gap-12 lg:grid-cols-2 lg:items-center lg:gap-16"
         )}
       >
         <div>
           {badge && (
             <div className={compact ? "mb-4" : "mb-6"}>
-              <ShimmerBadge tone="cyan">{badge}</ShimmerBadge>
+              <ShimmerBadge tone="teal">{badge}</ShimmerBadge>
             </div>
           )}
-          <h1 className={cn("text-balance", sectionHeroHeading(compact))}>
+          <h1
+            className={cn(
+              "text-balance text-white",
+              sectionHeroHeading(compact)
+            )}
+          >
             {title}
           </h1>
           {description && (
-            <p className={cn("mt-4 max-w-lg text-balance", sectionSubheading(compact))}>
+            <p
+              className={cn(
+                "mt-5 max-w-lg text-balance text-white/55",
+                sectionSubheading(compact)
+              )}
+            >
               {description}
             </p>
           )}
           {bullets && bullets.length > 0 && !compact && (
-            <ul className="mt-8 space-y-2 text-sm text-white/70">
+            <ul className="mt-9 space-y-3 text-sm text-white/70">
               {bullets.map((b) => (
-                <li key={b} className="flex items-center gap-2">
-                  <span className="grid size-5 shrink-0 place-items-center rounded-full border border-emerald-400/40 bg-emerald-400/10 text-emerald-300">
+                <li key={b} className="flex items-center gap-2.5">
+                  <span className="grid size-5 shrink-0 place-items-center rounded-full border border-teal-400/35 bg-teal-400/10 text-teal-300">
                     <svg
                       viewBox="0 0 16 16"
                       className="size-3"
@@ -98,7 +117,11 @@ export function HeroSplit({
                       stroke="currentColor"
                       strokeWidth={2}
                     >
-                      <path d="M3 8l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M3 8l3 3 7-7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </span>
                   {b}
@@ -111,25 +134,33 @@ export function HeroSplit({
         <form
           onSubmit={handleSubmit}
           className={cn(
-            "relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl",
+            "relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl transition hover:border-white/[0.14]",
             compact ? "p-5" : "p-8"
           )}
         >
-          <div className="absolute -top-px left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-violet-400/60 to-transparent" />
-          <h3 className={cn("font-semibold tracking-tight", compact ? "text-lg" : "text-2xl")}>
+          <div
+            aria-hidden
+            className="absolute -top-px left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-teal-400/55 to-transparent"
+          />
+          <h3
+            className={cn(
+              "font-semibold tracking-tight text-white",
+              compact ? "text-lg" : "text-2xl"
+            )}
+          >
             {formTitle}
           </h3>
-          <p className="mt-1 text-sm text-white/60">
+          <p className="mt-1.5 text-sm text-white/55">
             We&apos;ll send your invite shortly.
           </p>
-          <div className="mt-4 flex flex-col gap-4">
+          <div className="mt-5 flex flex-col gap-4">
             <NeonInput
               label="Work email"
               name="email"
               type="email"
               required
               placeholder="you@company.com"
-              accent="violet"
+              accent="teal"
             />
             {!compact && (
               <NeonInput
@@ -144,7 +175,7 @@ export function HeroSplit({
             type="submit"
             variant="aurora"
             size={compact ? "md" : "lg"}
-            className="mt-5 w-full"
+            className="mt-6 w-full"
           >
             {formCta}
           </GradientButton>

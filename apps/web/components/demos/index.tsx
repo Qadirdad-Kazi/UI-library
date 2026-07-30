@@ -59,6 +59,18 @@ import {
   BorderBeam,
   RainbowButton,
   SparklesText,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  Alert,
+  Sheet,
+  MagneticButton,
+  FormField,
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
 } from "@nebula/ui";
 import {
   Bot,
@@ -1257,6 +1269,141 @@ export function SparklesTextDemo() {
   );
 }
 
+
+export function TabsDemo() {
+  return (
+    <div className="mx-auto w-full max-w-md py-10">
+      <Tabs defaultValue="overview">
+        <TabsList className="w-full justify-start">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview">
+          <GlowCard glowColor="#2dd4bf" className="mt-2">
+            <p className="text-sm text-white/65">
+              Polished tabs with keyboard-friendly triggers and smooth content
+              transitions.
+            </p>
+          </GlowCard>
+        </TabsContent>
+        <TabsContent value="analytics">
+          <GlowCard glowColor="#7c6af5" className="mt-2">
+            <p className="text-sm text-white/65">
+              Switch panels without remounting your whole layout.
+            </p>
+          </GlowCard>
+        </TabsContent>
+        <TabsContent value="settings">
+          <GlowCard glowColor="#f472b6" className="mt-2">
+            <p className="text-sm text-white/65">
+              Ideal for docs, dashboards, and component playgrounds.
+            </p>
+          </GlowCard>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+export function AlertDemo() {
+  const [visible, setVisible] = useState(true);
+  return (
+    <div className="mx-auto flex w-full max-w-lg flex-col gap-3 py-10">
+      <Alert variant="info" title="Heads up">
+        Nebula styles now ship with the package via @nebula/ui/styles.css.
+      </Alert>
+      <Alert variant="success" title="Deployed">
+        Your production build completed successfully.
+      </Alert>
+      <Alert variant="warning" title="Review required">
+        Two accessibility checks need attention before release.
+      </Alert>
+      {visible && (
+        <Alert variant="error" title="Action failed" onDismiss={() => setVisible(false)}>
+          Could not sync preferences. Try again in a moment.
+        </Alert>
+      )}
+    </div>
+  );
+}
+
+export function SheetDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex items-center justify-center py-10">
+      <GradientButton variant="ocean" onClick={() => setOpen(true)}>
+        Open sheet
+      </GradientButton>
+      <Sheet
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Account settings"
+        description="Manage profile, billing, and notifications."
+      >
+        <div className="space-y-4">
+          <NeonInput label="Display name" defaultValue="Nebula" accent="teal" />
+          <NeonInput label="Email" defaultValue="hello@nebula.dev" accent="teal" />
+          <GradientButton className="w-full" onClick={() => setOpen(false)}>
+            Save changes
+          </GradientButton>
+        </div>
+      </Sheet>
+    </div>
+  );
+}
+
+export function MagneticButtonDemo() {
+  return (
+    <div className="flex items-center justify-center py-12">
+      <MagneticButton strength={0.4}>Hover — I follow you</MagneticButton>
+    </div>
+  );
+}
+
+export function FormFieldDemo() {
+  return (
+    <div className="mx-auto w-full max-w-sm space-y-4 py-10">
+      <FormField label="Workspace" hint="Visible to your team" required>
+        <NeonInput placeholder="acme-studio" accent="teal" />
+      </FormField>
+      <FormField label="Invite email" error="Enter a valid email address">
+        <NeonInput placeholder="teammate@acme.com" accent="teal" error=" " />
+      </FormField>
+    </div>
+  );
+}
+
+export function AccordionDemo() {
+  return (
+    <div className="mx-auto w-full max-w-lg py-10">
+      <Accordion type="single" defaultValue="one">
+        <AccordionItem value="one">
+          <AccordionTrigger value="one">Is Nebula production-ready?</AccordionTrigger>
+          <AccordionContent value="one">
+            Yes — components ship with typed APIs, focus management, and reduced-motion
+            support for continuous animations.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="two">
+          <AccordionTrigger value="two">Does it work with Tailwind v4?</AccordionTrigger>
+          <AccordionContent value="two">
+            Absolutely. Import Tailwind and `@nebula/ui/styles.css`, then drop components
+            into any React app.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="three">
+          <AccordionTrigger value="three">Can I customize styles?</AccordionTrigger>
+          <AccordionContent value="three">
+            Every component accepts className and merges via tailwind-merge. Override
+            tokens with CSS variables for brand-level theming.
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
+  );
+}
+
 /* ----------------------- Source strings ----------------------- */
 
 export const DEMO_SOURCE: Record<string, string> = {
@@ -1860,6 +2007,12 @@ export const DEMO_COMPONENTS: Record<string, ComponentType> = {
   "border-beam": BorderBeamDemo,
   "rainbow-button": RainbowButtonDemo,
   "sparkles-text": SparklesTextDemo,
+  tabs: TabsDemo,
+  alert: AlertDemo,
+  sheet: SheetDemo,
+  "magnetic-button": MagneticButtonDemo,
+  "form-field": FormFieldDemo,
+  accordion: AccordionDemo,
   // Backgrounds
   "particle-field": ParticleFieldDemo,
   "aurora-background": AuroraBackgroundDemo,

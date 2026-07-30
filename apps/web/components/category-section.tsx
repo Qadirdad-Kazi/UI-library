@@ -89,7 +89,7 @@ export function CategorySection() {
           <ShimmerBadge tone="cyan">Library</ShimmerBadge>
           <h2 className="text-display mt-4 text-balance text-4xl font-semibold leading-tight md:text-5xl">
             Categories curated for{" "}
-            <span className="bg-[linear-gradient(110deg,#22d3ee,#a78bfa,#f472b6)] bg-clip-text text-transparent">
+            <span className="bg-[linear-gradient(110deg,#2dd4bf,#a5b4fc,#f0abfc)] bg-clip-text text-transparent">
               real product surfaces.
             </span>
           </h2>

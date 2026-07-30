@@ -19,18 +19,19 @@ export interface CtaBannerProps extends SectionDensityProps {
 
 const variantGradients: Record<CtaBannerVariant, string> = {
   aurora:
-    "bg-[radial-gradient(ellipse_at_top,rgba(124,58,237,0.25),transparent_55%)]",
+    "bg-[radial-gradient(ellipse_at_top,rgba(45,212,191,0.18),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(124,58,237,0.12),transparent_50%)]",
   ocean:
-    "bg-[radial-gradient(ellipse_at_top,rgba(34,211,238,0.25),transparent_55%)]",
+    "bg-[radial-gradient(ellipse_at_top,rgba(34,211,238,0.22),transparent_55%)]",
   sunset:
-    "bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.25),transparent_55%)]",
+    "bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.22),transparent_55%)]",
 };
 
-const buttonVariants: Record<CtaBannerVariant, "aurora" | "ocean" | "sunset"> = {
-  aurora: "aurora",
-  ocean: "ocean",
-  sunset: "sunset",
-};
+const buttonVariants: Record<CtaBannerVariant, "aurora" | "ocean" | "sunset"> =
+  {
+    aurora: "aurora",
+    ocean: "ocean",
+    sunset: "sunset",
+  };
 
 export function CtaBanner({
   title,
@@ -46,20 +47,24 @@ export function CtaBanner({
   return (
     <section
       className={cn(
-        "rounded-3xl border border-white/10",
+        "relative overflow-hidden rounded-3xl border border-white/10 backdrop-blur-xl",
         compact ? "p-6 md:p-8" : "p-10 md:p-16",
         variantGradients[variant],
         className
       )}
     >
-      <div className="mx-auto grid max-w-4xl gap-8 text-center md:gap-6">
-        <h2 className={cn("text-balance", sectionHeading(compact))}>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/40 to-transparent"
+      />
+      <div className="relative mx-auto grid max-w-4xl gap-6 text-center md:gap-7">
+        <h2 className={cn("text-balance text-white", sectionHeading(compact))}>
           {title}
         </h2>
         {description && (
           <p
             className={cn(
-              "mx-auto max-w-2xl text-balance text-white/65",
+              "mx-auto max-w-2xl text-balance text-white/55",
               compact ? "text-sm" : "md:text-lg"
             )}
           >
@@ -67,23 +72,29 @@ export function CtaBanner({
           </p>
         )}
         {(primaryCta || secondaryCta) && (
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
             {primaryCta && (
-              <a href={primaryCta.href} onClick={primaryCta.onClick}>
-                <GradientButton
-                  variant={buttonVariants[variant]}
-                  size={compact ? "md" : "lg"}
-                >
-                  {primaryCta.label}
-                </GradientButton>
-              </a>
+              <GradientButton
+                asChild={Boolean(primaryCta.href)}
+                variant={buttonVariants[variant]}
+                size={compact ? "md" : "lg"}
+                onClick={primaryCta.href ? undefined : primaryCta.onClick}
+              >
+                {primaryCta.href ? (
+                  <a href={primaryCta.href} onClick={primaryCta.onClick}>
+                    {primaryCta.label}
+                  </a>
+                ) : (
+                  primaryCta.label
+                )}
+              </GradientButton>
             )}
             {secondaryCta && (
               <a
                 href={secondaryCta.href}
                 onClick={secondaryCta.onClick}
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] font-medium text-white/90 backdrop-blur-md transition hover:border-white/30 hover:bg-white/[0.06]",
+                  "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] font-medium text-white/85 backdrop-blur-md transition duration-300 hover:border-white/25 hover:bg-white/[0.06] hover:text-white",
                   compact ? "h-10 px-4 text-sm" : "h-14 px-6 text-base"
                 )}
               >

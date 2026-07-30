@@ -24,7 +24,7 @@ export interface NeonSelectProps
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
-  accent?: "violet" | "cyan" | "pink";
+  accent?: "violet" | "cyan" | "pink" | "teal";
   error?: string;
   disabled?: boolean;
 }
@@ -32,18 +32,23 @@ export interface NeonSelectProps
 const accentMap = {
   violet: {
     focus:
-      "shadow-[0_0_30px_-5px_rgba(139,92,246,0.6)] border-violet-400/60",
-    highlight: "bg-violet-500/20 text-violet-200",
+      "shadow-[0_0_0_1px_rgba(124,106,245,0.45),0_0_28px_-6px_rgba(124,106,245,0.4)] border-[#7c6af5]/50",
+    highlight: "bg-[#7c6af5]/20 text-violet-200",
   },
   cyan: {
     focus:
-      "shadow-[0_0_30px_-5px_rgba(34,211,238,0.6)] border-cyan-400/60",
+      "shadow-[0_0_0_1px_rgba(34,211,238,0.45),0_0_28px_-6px_rgba(34,211,238,0.4)] border-cyan-400/50",
     highlight: "bg-cyan-500/20 text-cyan-200",
   },
   pink: {
     focus:
-      "shadow-[0_0_30px_-5px_rgba(236,72,153,0.6)] border-pink-400/60",
+      "shadow-[0_0_0_1px_rgba(236,72,153,0.45),0_0_28px_-6px_rgba(236,72,153,0.4)] border-pink-400/50",
     highlight: "bg-pink-500/20 text-pink-200",
+  },
+  teal: {
+    focus:
+      "shadow-[0_0_0_1px_rgba(45,212,191,0.45),0_0_28px_-6px_rgba(45,212,191,0.4)] border-teal-400/50",
+    highlight: "bg-teal-500/20 text-teal-200",
   },
 } as const;
 
@@ -55,7 +60,7 @@ export const NeonSelect = forwardRef<HTMLDivElement, NeonSelectProps>(
       value,
       onChange,
       placeholder = "Select an option",
-      accent = "violet",
+      accent = "teal",
       error,
       disabled,
       className,
@@ -78,7 +83,6 @@ export const NeonSelect = forwardRef<HTMLDivElement, NeonSelectProps>(
       setHighlightIndex(-1);
     }, []);
 
-    // Close on outside click
     useEffect(() => {
       if (!isOpen) return;
       const handler = (e: Event) => {
@@ -134,16 +138,12 @@ export const NeonSelect = forwardRef<HTMLDivElement, NeonSelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="text-xs font-medium uppercase tracking-[0.18em] text-white/60"
+            className="text-xs font-medium uppercase tracking-[0.16em] text-white/55"
           >
             {label}
           </label>
         )}
-        <div
-          ref={ref}
-          className={cn("relative", className)}
-          {...props}
-        >
+        <div ref={ref} className={cn("relative", className)} {...props}>
           <button
             id={selectId}
             type="button"
@@ -156,9 +156,10 @@ export const NeonSelect = forwardRef<HTMLDivElement, NeonSelectProps>(
             onKeyDown={handleKeyDown}
             className={cn(
               "flex h-12 w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] px-4 text-base backdrop-blur-md",
-              "transition-all duration-300",
+              "transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
               isOpen && colors.focus,
-              error && "border-red-400/60",
+              error &&
+                "border-red-400/55 shadow-[0_0_0_1px_rgba(248,113,113,0.35)]",
               disabled && "pointer-events-none opacity-50"
             )}
           >
@@ -172,6 +173,7 @@ export const NeonSelect = forwardRef<HTMLDivElement, NeonSelectProps>(
               )}
               viewBox="0 0 16 16"
               fill="none"
+              aria-hidden
             >
               <path
                 d="M4 6l4 4 4-4"
@@ -187,7 +189,7 @@ export const NeonSelect = forwardRef<HTMLDivElement, NeonSelectProps>(
             <ul
               id={`${selectId}-listbox`}
               role="listbox"
-              className="absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-[#0a0a14]/95 py-1 shadow-2xl backdrop-blur-xl"
+              className="absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-[rgba(12,12,22,0.95)] py-1 shadow-2xl backdrop-blur-xl motion-safe:animate-[nebula-scale-in_150ms_var(--nebula-ease-out)_both]"
             >
               {options.map((opt, i) => (
                 <li

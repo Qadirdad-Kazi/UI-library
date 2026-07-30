@@ -9,21 +9,26 @@ export interface GlowToggleProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
-  accent?: "violet" | "cyan" | "pink";
+  accent?: "violet" | "cyan" | "pink" | "teal";
   size?: GlowToggleSize;
   label?: string;
 }
 
 const accentColors = {
-  violet: {
-    bg: "bg-violet-500",
-    glow: "shadow-[0_0_20px_-2px_rgba(139,92,246,0.7)]",
-    ring: "focus-visible:ring-violet-400/50",
+  teal: {
+    bg: "bg-teal-500",
+    glow: "shadow-[0_0_20px_-2px_rgba(45,212,191,0.7)]",
+    ring: "focus-visible:ring-teal-400/50",
   },
   cyan: {
     bg: "bg-cyan-500",
     glow: "shadow-[0_0_20px_-2px_rgba(34,211,238,0.7)]",
     ring: "focus-visible:ring-cyan-400/50",
+  },
+  violet: {
+    bg: "bg-violet-500",
+    glow: "shadow-[0_0_20px_-2px_rgba(139,92,246,0.65)]",
+    ring: "focus-visible:ring-violet-400/50",
   },
   pink: {
     bg: "bg-pink-500",
@@ -43,7 +48,7 @@ export const GlowToggle = forwardRef<HTMLButtonElement, GlowToggleProps>(
     {
       checked = false,
       onChange,
-      accent = "violet",
+      accent = "teal",
       size = "md",
       label,
       disabled,
@@ -66,12 +71,11 @@ export const GlowToggle = forwardRef<HTMLButtonElement, GlowToggleProps>(
           disabled={disabled}
           onClick={() => onChange?.(!checked)}
           className={cn(
-            "relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-300",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+            "relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#06060d]",
+            "motion-reduce:transition-none",
             colors.ring,
-            checked
-              ? cn(colors.bg, colors.glow)
-              : "bg-white/10",
+            checked ? cn(colors.bg, colors.glow) : "bg-white/10 hover:bg-white/15",
             disabled && "pointer-events-none opacity-50",
             sizes.track,
             className
@@ -81,14 +85,14 @@ export const GlowToggle = forwardRef<HTMLButtonElement, GlowToggleProps>(
           <span
             aria-hidden
             className={cn(
-              "pointer-events-none inline-block rounded-full bg-white shadow-lg transition-transform duration-300 ease-out",
+              "pointer-events-none inline-block rounded-full bg-white shadow-lg transition-transform duration-300 ease-out motion-reduce:transition-none",
               sizes.thumb,
               checked ? sizes.translate : "translate-x-0.5"
             )}
           />
         </button>
         {label && (
-          <span className="text-sm text-white/70">{label}</span>
+          <span className="text-sm text-white/55">{label}</span>
         )}
       </div>
     );

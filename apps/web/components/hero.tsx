@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ShimmerBadge, GradientButton } from "@nebula/ui";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Copy, Check } from "lucide-react";
+import { useState } from "react";
 
 const AiSphere = dynamic(
   () => import("./ai-sphere").then((m) => m.AiSphere),
@@ -13,7 +14,7 @@ const AiSphere = dynamic(
     ssr: false,
     loading: () => (
       <div className="absolute inset-0 grid place-items-center">
-        <div className="size-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.6),rgba(34,211,238,0.2)_50%,transparent_70%)] blur-2xl" />
+        <div className="size-48 rounded-full bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.45),rgba(124,106,245,0.2)_45%,transparent_70%)] blur-2xl" />
       </div>
     ),
   }
@@ -21,99 +22,129 @@ const AiSphere = dynamic(
 
 export function Hero() {
   const root = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!root.current) return;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReduced) return;
+
     const ctx = gsap.context(() => {
       gsap.from("[data-hero-anim]", {
-        y: 32,
+        y: 28,
         opacity: 0,
-        duration: 1,
+        duration: 0.95,
         ease: "power3.out",
-        stagger: 0.12,
-        delay: 0.2,
+        stagger: 0.1,
+        delay: 0.15,
       });
     }, root);
     return () => ctx.revert();
   }, []);
 
+  const copyInstall = async () => {
+    try {
+      await navigator.clipboard.writeText("npm install @nebula/ui");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* ignore */
+    }
+  };
+
   return (
     <section
       ref={root}
-      className="relative isolate flex min-h-[100svh] items-center overflow-hidden"
+      className="relative isolate flex min-h-[100svh] items-center overflow-hidden pt-16"
     >
-      <div className="absolute inset-0 bg-grid opacity-30 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
-      <div className="absolute -top-32 left-1/2 size-[600px] -translate-x-1/2 rounded-full bg-violet-500/20 blur-[120px]" />
-      <div className="absolute top-1/3 -right-32 size-[500px] rounded-full bg-cyan-500/15 blur-[120px]" />
+      <div className="absolute inset-0 bg-grid opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_72%)]" />
+      <div className="absolute -top-40 left-1/2 size-[620px] -translate-x-1/2 rounded-full bg-teal-400/15 blur-[130px]" />
+      <div className="absolute top-1/3 -right-40 size-[480px] rounded-full bg-violet-500/12 blur-[120px]" />
+      <div className="absolute bottom-0 left-0 size-[360px] rounded-full bg-cyan-400/8 blur-[100px]" />
 
-      <div className="pointer-events-none absolute inset-0 -z-10">
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-90">
         <AiSphere className="size-full" />
       </div>
 
       <div className="container-page relative z-10">
         <div className="max-w-3xl">
           <div data-hero-anim className="mb-6">
-            <ShimmerBadge tone="violet">
+            <ShimmerBadge tone="teal" pulse>
               <Sparkles className="size-3" />
-              v0.1 · Cinematic React UI
+              v1.0 · Production ready
             </ShimmerBadge>
           </div>
 
           <h1
             data-hero-anim
-            className="text-display text-balance text-5xl font-semibold leading-[1.05] sm:text-6xl md:text-7xl lg:text-8xl"
+            className="text-display text-balance text-5xl font-semibold leading-[1.02] sm:text-6xl md:text-7xl lg:text-[5.5rem]"
           >
-            Components that{" "}
-            <span className="bg-[linear-gradient(110deg,#a78bfa_10%,#22d3ee_40%,#f472b6_70%,#a78bfa_100%)] bg-[length:200%_auto] bg-clip-text text-transparent [animation:gradient-shift_6s_ease_infinite]">
-              feel alive.
+            <span className="block text-white">Nebula</span>
+            <span className="mt-1 block bg-[linear-gradient(110deg,#5eead4_0%,#a5b4fc_40%,#f0abfc_75%,#5eead4_100%)] bg-[length:200%_auto] bg-clip-text text-transparent motion-safe:[animation:nebula-gradient-shift_7s_ease_infinite]">
+              UI that feels alive.
             </span>
           </h1>
 
           <p
             data-hero-anim
-            className="mt-6 max-w-xl text-balance text-lg text-white/70 md:text-xl"
+            className="mt-6 max-w-xl text-balance text-lg text-white/60 md:text-xl"
           >
-            Nebula is a premium React library of 3D-aware, motion-rich UI primitives.
-            Browse section categories, open live demos, and copy the code into your
-            project in seconds.
+            A cinematic React library of motion-rich primitives, page sections,
+            and animated backgrounds — typed, accessible, and ready to ship.
           </p>
 
-          <div data-hero-anim className="mt-10 flex flex-wrap items-center gap-4">
-            <Link href="#components">
-              <GradientButton variant="aurora" size="lg">
+          <div data-hero-anim className="mt-10 flex flex-wrap items-center gap-3">
+            <GradientButton asChild variant="aurora" size="lg">
+              <Link href="/components">
                 Explore components
                 <ArrowRight className="size-4" />
-              </GradientButton>
-            </Link>
-            <Link
-              href="/docs"
-              className="group inline-flex h-14 items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-6 text-base font-medium text-white/90 backdrop-blur-md transition hover:border-white/30 hover:bg-white/[0.06]"
-            >
-              Read the docs
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+              </Link>
+            </GradientButton>
+            <GradientButton asChild variant="ghost" size="lg" glow={false}>
+              <Link href="/docs">Read the docs</Link>
+            </GradientButton>
           </div>
 
-          <div data-hero-anim className="mt-12 flex items-center gap-8 text-sm text-white/50">
+          <button
+            data-hero-anim
+            type="button"
+            onClick={copyInstall}
+            className="mt-8 inline-flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 font-mono text-sm text-white/70 backdrop-blur-md transition hover:border-white/20 hover:text-white"
+          >
+            <span className="text-teal-300/80">$</span>
+            <span>npm install @nebula/ui</span>
+            {copied ? (
+              <Check className="size-3.5 text-emerald-400" />
+            ) : (
+              <Copy className="size-3.5 text-white/40" />
+            )}
+          </button>
+
+          <div
+            data-hero-anim
+            className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-white/45"
+          >
             <div>
-              <div className="text-2xl font-semibold text-white">12+</div>
+              <div className="text-2xl font-semibold text-white">60+</div>
               <div>Components</div>
             </div>
-            <div className="h-8 w-px bg-white/10" />
+            <div className="hidden h-8 w-px bg-white/10 sm:block" />
             <div>
               <div className="text-2xl font-semibold text-white">100%</div>
               <div>TypeScript</div>
             </div>
-            <div className="h-8 w-px bg-white/10" />
+            <div className="hidden h-8 w-px bg-white/10 sm:block" />
             <div>
-              <div className="text-2xl font-semibold text-white">0kb</div>
-              <div>Runtime CSS</div>
+              <div className="text-2xl font-semibold text-white">A11y</div>
+              <div>Focus & motion aware</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--color-bg)] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[var(--color-bg)] to-transparent" />
     </section>
   );
 }

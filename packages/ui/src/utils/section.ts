@@ -24,7 +24,7 @@ export function sectionHeroHeading(compact?: boolean) {
 }
 
 export function sectionSubheading(compact?: boolean) {
-  return cn("text-white/60", compact ? "text-sm" : "md:text-lg");
+  return cn("text-white/55", compact ? "text-sm" : "md:text-lg");
 }
 
 export function sectionHeaderGap(compact?: boolean) {

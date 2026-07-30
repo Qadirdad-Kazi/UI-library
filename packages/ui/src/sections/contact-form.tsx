@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, type FormEvent } from "react";
+import { useState, type ReactNode, type FormEvent } from "react";
 import { useCompactMode } from "../utils/compact-context";
 import { cn } from "../utils/cn";
 import {
@@ -12,6 +12,7 @@ import {
 } from "../utils/section";
 import { GradientButton } from "../components/gradient-button";
 import { NeonInput } from "../components/neon-input";
+import { NeonTextarea } from "../components/neon-textarea";
 import { ShimmerBadge } from "../components/shimmer-badge";
 
 export interface ContactFormItem {
@@ -24,7 +25,14 @@ export interface ContactFormProps extends SectionDensityProps {
   title?: ReactNode;
   description?: ReactNode;
   details?: ContactFormItem[];
-  onSubmit?: (data: { name: string; email: string; message: string }) => void;
+  onSubmit?: (data: {
+    name: string;
+    email: string;
+    message: string;
+  }) => void | Promise<void>;
+  /** Controlled loading state for the submit button */
+  loading?: boolean;
+  submitLabel?: string;
   className?: string;
 }
 
@@ -34,19 +42,30 @@ export function ContactForm({
   description,
   details = [],
   onSubmit,
+  loading: loadingProp,
+  submitLabel = "Send message",
   compact: compactProp,
   className,
 }: ContactFormProps) {
   const compact = useCompactMode(compactProp);
+  const [internalLoading, setInternalLoading] = useState(false);
+  const loading = loadingProp ?? internalLoading;
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    onSubmit?.({
+    const payload = {
       name: String(fd.get("name") ?? ""),
       email: String(fd.get("email") ?? ""),
       message: String(fd.get("message") ?? ""),
-    });
+    };
+
+    if (loadingProp === undefined) setInternalLoading(true);
+    try {
+      await onSubmit?.(payload);
+    } finally {
+      if (loadingProp === undefined) setInternalLoading(false);
+    }
   };
 
   return (
@@ -55,18 +74,30 @@ export function ContactForm({
         <div
           className={cn(
             "grid gap-12",
-            compact ? "grid-cols-1" : "lg:grid-cols-[1fr_1.2fr] lg:items-start"
+            compact
+              ? "grid-cols-1"
+              : "lg:grid-cols-[1fr_1.2fr] lg:items-start lg:gap-16"
           )}
         >
           <div>
-            {eyebrow && <ShimmerBadge tone="cyan">{eyebrow}</ShimmerBadge>}
+            {eyebrow && <ShimmerBadge tone="teal">{eyebrow}</ShimmerBadge>}
             {title && (
-              <h2 className={cn("mt-4 text-balance", sectionHeading(compact))}>
+              <h2
+                className={cn(
+                  "mt-4 text-balance text-white",
+                  sectionHeading(compact)
+                )}
+              >
                 {title}
               </h2>
             )}
             {description && (
-              <p className={cn("mt-4 max-w-md text-balance", sectionSubheading(compact))}>
+              <p
+                className={cn(
+                  "mt-4 max-w-md text-balance text-white/55",
+                  sectionSubheading(compact)
+                )}
+              >
                 {description}
               </p>
             )}
@@ -77,7 +108,7 @@ export function ContactForm({
                     <dt className="text-xs font-medium uppercase tracking-[0.18em] text-white/40">
                       {d.label}
                     </dt>
-                    <dd className="mt-1 text-base text-white/85">{d.value}</dd>
+                    <dd className="mt-1.5 text-base text-white/85">{d.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -87,18 +118,27 @@ export function ContactForm({
           <form
             onSubmit={handleSubmit}
             className={cn(
-              "relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl",
+              "relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl transition duration-300 hover:border-white/[0.14]",
               compact ? "p-5" : "p-8"
             )}
           >
-            <div className="absolute -top-px left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
-            <div className={cn("grid gap-5", compact ? "grid-cols-1" : "md:grid-cols-2")}>
+            <div
+              aria-hidden
+              className="absolute -top-px left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-teal-400/55 to-transparent"
+            />
+            <div
+              className={cn(
+                "grid gap-5",
+                compact ? "grid-cols-1" : "md:grid-cols-2"
+              )}
+            >
               <NeonInput
                 label="Name"
                 name="name"
                 required
                 placeholder="Ada Lovelace"
-                accent="violet"
+                accent="teal"
+                disabled={loading}
               />
               <NeonInput
                 label="Email"
@@ -107,33 +147,30 @@ export function ContactForm({
                 required
                 placeholder="ada@nebula.dev"
                 accent="cyan"
+                disabled={loading}
               />
             </div>
-            <div className="mt-5 flex w-full flex-col gap-2">
-              <label
-                htmlFor="contact-message"
-                className="text-xs font-medium uppercase tracking-[0.18em] text-white/60"
-              >
-                Message
-              </label>
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-md transition-all duration-300 focus-within:border-pink-400/60 focus-within:shadow-[0_0_30px_-5px_rgba(236,72,153,0.5)]">
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  required
-                  placeholder="What can we help with?"
-                  rows={compact ? 3 : 5}
-                  className="w-full resize-none bg-transparent px-4 py-3 text-base text-white outline-none placeholder:text-white/30"
-                />
-              </div>
+            <div className="mt-5">
+              <NeonTextarea
+                id="contact-message"
+                label="Message"
+                name="message"
+                required
+                placeholder="What can we help with?"
+                rows={compact ? 3 : 5}
+                accent="teal"
+                disabled={loading}
+              />
             </div>
             <GradientButton
               type="submit"
               variant="aurora"
               size={compact ? "md" : "lg"}
               className="mt-6 w-full"
+              loading={loading}
+              disabled={loading}
             >
-              Send message
+              {submitLabel}
             </GradientButton>
           </form>
         </div>

@@ -27,12 +27,12 @@ export interface AboutMissionProps extends SectionDensityProps {
 }
 
 const VALUE_ACCENTS = [
-  { from: "#7c3aed", to: "#a78bfa" }, // violet
-  { from: "#0891b2", to: "#22d3ee" }, // cyan
-  { from: "#be185d", to: "#f472b6" }, // pink
-  { from: "#b45309", to: "#fbbf24" }, // amber
-  { from: "#047857", to: "#34d399" }, // emerald
-  { from: "#1d4ed8", to: "#60a5fa" }, // blue
+  { from: "#7c6af5", to: "#a78bfa" },
+  { from: "#0d9488", to: "#2dd4bf" },
+  { from: "#be185d", to: "#f472b6" },
+  { from: "#b45309", to: "#fbbf24" },
+  { from: "#047857", to: "#34d399" },
+  { from: "#1d4ed8", to: "#60a5fa" },
 ];
 
 export function AboutMission({
@@ -48,18 +48,23 @@ export function AboutMission({
 
   return (
     <section
-      className={cn("relative overflow-hidden", sectionPadding(compact), className)}
+      className={cn(
+        "relative overflow-hidden",
+        sectionPadding(compact),
+        className
+      )}
     >
-      {/* Top gradient rule */}
-      <div className="absolute inset-x-0 top-0 mx-auto h-px max-w-3xl bg-gradient-to-r from-transparent via-violet-400/60 to-transparent" />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 mx-auto h-px max-w-3xl bg-gradient-to-r from-transparent via-[#7c6af5]/50 to-transparent"
+      />
 
-      {/* Ambient background */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[500px] max-w-4xl"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.1) 0%, rgba(34,211,238,0.05) 50%, transparent 80%)",
+            "radial-gradient(ellipse at 50% 0%, rgba(124,106,245,0.12) 0%, rgba(45,212,191,0.06) 50%, transparent 80%)",
         }}
       />
 
@@ -70,12 +75,17 @@ export function AboutMission({
           </div>
         )}
 
-        <h2 className={cn("mt-6 text-balance text-center", sectionHeading(compact))}>
+        <h2
+          className={cn(
+            "mt-6 text-balance text-center text-white",
+            sectionHeading(compact)
+          )}
+        >
           {title}
           {highlight ? (
             <>
               {" "}
-              <span className="bg-[linear-gradient(110deg,#a78bfa,#22d3ee,#f472b6,#a78bfa)] bg-[length:200%_auto] bg-clip-text text-transparent [animation:gradient-shift_6s_ease_infinite]">
+              <span className="bg-[linear-gradient(110deg,#7c6af5,#2dd4bf,#a78bfa,#7c6af5)] bg-[length:200%_auto] bg-clip-text text-transparent motion-safe:[animation:nebula-gradient-shift_6s_ease_infinite]">
                 {highlight}
               </span>
             </>
@@ -85,7 +95,7 @@ export function AboutMission({
         {paragraphs.length > 0 && (
           <div
             className={cn(
-              "mx-auto mt-8 max-w-2xl space-y-4 text-center text-white/60",
+              "mx-auto mt-8 max-w-2xl space-y-4 text-center text-white/55",
               sectionSubheading(compact)
             )}
           >
@@ -110,21 +120,19 @@ export function AboutMission({
                 <div
                   key={v.title}
                   className={cn(
-                    "group relative overflow-hidden rounded-2xl border border-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/20",
+                    "group relative overflow-hidden rounded-2xl border border-white/10 backdrop-blur-xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-white/20 motion-reduce:hover:translate-y-0",
                     compact ? "p-5" : "p-6"
                   )}
                   style={{
                     background: `linear-gradient(135deg, ${accent.from}14 0%, rgba(255,255,255,0.01) 60%)`,
                   }}
                 >
-                  {/* Glow orb top-right */}
                   <div
                     aria-hidden
                     className="pointer-events-none absolute -right-8 -top-8 size-32 rounded-full opacity-20 blur-2xl transition-opacity duration-500 group-hover:opacity-40"
                     style={{ background: accent.from }}
                   />
 
-                  {/* Index number */}
                   <div
                     className="mb-4 font-mono text-4xl font-bold leading-none tracking-tighter opacity-20"
                     style={{ color: accent.to }}
@@ -132,7 +140,6 @@ export function AboutMission({
                     {String(i + 1).padStart(2, "0")}
                   </div>
 
-                  {/* Accent line */}
                   <div
                     className="mb-4 h-px w-12 rounded-full"
                     style={{
@@ -142,7 +149,7 @@ export function AboutMission({
 
                   <h3
                     className={cn(
-                      "font-semibold tracking-tight",
+                      "font-semibold tracking-tight text-white",
                       compact ? "text-base" : "text-lg"
                     )}
                   >

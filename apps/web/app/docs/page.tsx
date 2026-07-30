@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { ShimmerBadge, GradientButton } from "@nebula/ui";
+import { ShimmerBadge, GradientButton, Alert } from "@nebula/ui";
 import { CodeBlock } from "@/components/code-block";
 import { ArrowRight } from "lucide-react";
 
 export const metadata = {
   title: "Docs · Nebula UI",
-  description: "Install Nebula UI, theme it, and ship.",
+  description: "Install Nebula UI, theme it, and ship production-ready interfaces.",
 };
 
 const TOC = [
@@ -13,6 +13,7 @@ const TOC = [
   { id: "tailwind", label: "Tailwind setup" },
   { id: "first-component", label: "Your first component" },
   { id: "theming", label: "Theming" },
+  { id: "accessibility", label: "Accessibility" },
   { id: "best-practices", label: "Best practices" },
   { id: "license", label: "License" },
 ];
@@ -21,8 +22,7 @@ export default function DocsPage() {
   return (
     <div className="container-page pt-32 pb-24">
       <div className="grid gap-12 lg:grid-cols-[220px_1fr]">
-        {/* Sidebar TOC */}
-        <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
+        <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">
             On this page
           </div>
@@ -41,17 +41,24 @@ export default function DocsPage() {
         </aside>
 
         <article className="prose-nebula max-w-3xl">
-          <ShimmerBadge tone="violet">Docs · v0.1</ShimmerBadge>
+          <ShimmerBadge tone="teal">Docs · v1.0</ShimmerBadge>
           <h1 className="text-display mt-4 text-5xl font-semibold leading-tight md:text-6xl">
             Documentation
           </h1>
-          <p className="mt-4 text-balance text-lg text-white/70">
+          <p className="mt-4 text-balance text-lg text-white/60">
             Everything you need to integrate Nebula UI into a Next.js, Vite, or Remix
             project.
           </p>
 
+          <div className="mt-8">
+            <Alert variant="info" title="Styles are required">
+              Import <code className="font-mono text-xs">@nebula/ui/styles.css</code> so
+              keyframes and design tokens ship with consumers — not only the showcase site.
+            </Alert>
+          </div>
+
           <Section id="install" title="Install">
-            <p className="text-white/70">
+            <p className="text-white/65">
               Add Nebula UI to your project with your package manager of choice.
             </p>
             <div className="mt-4 grid gap-3">
@@ -62,33 +69,27 @@ export default function DocsPage() {
           </Section>
 
           <Section id="tailwind" title="Tailwind setup">
-            <p className="text-white/70">
-              Nebula UI is built on Tailwind v4. Make sure Tailwind is installed and
-              that your global stylesheet imports it:
+            <p className="text-white/65">
+              Nebula UI is built on Tailwind v4. Import Tailwind and the packaged styles:
             </p>
             <div className="mt-4">
               <CodeBlock
                 code={`/* app/globals.css */
-@import "tailwindcss";`}
-                lang="ts"
+@import "tailwindcss";
+@import "@nebula/ui/styles.css";`}
+                lang="css"
                 filename="globals.css"
-              />
-            </div>
-            <p className="mt-4 text-white/70">
-              If you're consuming the published package, also import the bundled styles:
-            </p>
-            <div className="mt-4">
-              <CodeBlock
-                code={`@import "@nebula/ui/styles.css";`}
-                lang="ts"
               />
             </div>
           </Section>
 
           <Section id="first-component" title="Your first component">
-            <p className="text-white/70">
-              Import any component and drop it into a page. Components are tree-shakable
-              and have zero runtime CSS.
+            <p className="text-white/65">
+              Import any component and drop it into a page. Prefer{" "}
+              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">
+                asChild
+              </code>{" "}
+              when wrapping Next.js Links.
             </p>
             <div className="mt-4">
               <CodeBlock
@@ -96,9 +97,9 @@ export default function DocsPage() {
 
 export default function SignIn() {
   return (
-    <GlowCard glowColor="#7c3aed" className="max-w-sm">
+    <GlowCard glowColor="#2dd4bf" className="max-w-sm">
       <h2 className="text-2xl font-semibold">Welcome back</h2>
-      <NeonInput label="Email" placeholder="you@nebula.dev" accent="violet" />
+      <NeonInput label="Email" placeholder="you@nebula.dev" accent="teal" />
       <GradientButton variant="aurora" size="lg" className="mt-4 w-full">
         Sign in
       </GradientButton>
@@ -112,74 +113,83 @@ export default function SignIn() {
           </Section>
 
           <Section id="theming" title="Theming">
-            <p className="text-white/70">
-              Every component accepts a <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">className</code>{" "}
+            <p className="text-white/65">
+              Every component accepts a{" "}
+              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">
+                className
+              </code>{" "}
               prop and merges it through{" "}
-              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">tailwind-merge</code>, so you can override anything. For
-              palette-level changes, customize the design tokens in your{" "}
-              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">@theme</code> block:
+              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">
+                tailwind-merge
+              </code>
+              . For palette-level changes, override CSS variables from{" "}
+              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">
+                @nebula/ui/styles.css
+              </code>
+              :
             </p>
             <div className="mt-4">
               <CodeBlock
-                code={`@theme {
-  --color-accent-violet: #8b5cf6;
-  --color-accent-cyan:   #22d3ee;
-  --color-accent-pink:   #ec4899;
+                code={`:root {
+  --nebula-bg: #06060d;
+  --nebula-accent: #7c6af5;
+  --nebula-accent-2: #2dd4bf;
 }`}
-                lang="ts"
+                lang="css"
                 filename="globals.css"
               />
             </div>
           </Section>
 
+          <Section id="accessibility" title="Accessibility">
+            <p className="text-white/65">
+              Modals and sheets trap focus and restore it on close. Continuous
+              animations respect{" "}
+              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">
+                prefers-reduced-motion
+              </code>
+              . Form controls expose{" "}
+              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">
+                aria-invalid
+              </code>{" "}
+              and alert roles for errors.
+            </p>
+          </Section>
+
           <Section id="best-practices" title="Best practices">
-            <ul className="mt-2 list-disc space-y-2 pl-6 text-white/70">
+            <ul className="mt-2 list-disc space-y-2 pl-5 text-white/65">
+              <li>Use section components for marketing pages; primitives for product UI.</li>
               <li>
-                Use <strong>GradientButton</strong> for primary CTAs, not for low-stakes
-                actions — its shimmer competes for attention.
+                Prefer{" "}
+                <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">
+                  GradientButton asChild
+                </code>{" "}
+                with Link instead of nesting buttons in anchors.
               </li>
               <li>
-                When stacking <strong>GlowCard</strong>s, vary the{" "}
-                <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-xs">glowColor</code> per
-                category so the spotlight tells a story.
+                Pass{" "}
+                <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm">
+                  compact
+                </code>{" "}
+                when embedding sections inside cards or previews.
               </li>
-              <li>
-                Pair the components with the smooth-scroll provider for the cinematic
-                effect — see{" "}
-                <Link className="underline underline-offset-4" href="/components">
-                  Component demos
-                </Link>.
-              </li>
-              <li>
-                The library is fully tree-shakable. Import only what you use.
-              </li>
+              <li>Wrap your app once in ToastProvider for notifications.</li>
             </ul>
           </Section>
 
           <Section id="license" title="License">
-            <p className="text-white/70">
-              Nebula UI is released under the MIT License. Use it in personal and
-              commercial projects, no attribution required (though we always appreciate
-              it).
+            <p className="text-white/65">
+              Nebula UI is MIT licensed. Use it commercially, modify it, and ship it.
             </p>
-          </Section>
-
-          <div className="mt-16 grid gap-6 rounded-3xl border border-white/10 bg-[radial-gradient(ellipse_at_top,rgba(34,211,238,0.18),transparent_55%)] p-8">
-            <h2 className="text-display text-3xl font-semibold">
-              Ready to ship?
-            </h2>
-            <p className="text-white/70">
-              Try every component in the live showcase.
-            </p>
-            <div>
-              <Link href="/components">
-                <GradientButton variant="ocean" size="lg">
-                  Open Showcase
+            <div className="mt-8">
+              <GradientButton asChild variant="aurora" size="lg">
+                <Link href="/components">
+                  Browse components
                   <ArrowRight className="size-4" />
-                </GradientButton>
-              </Link>
+                </Link>
+              </GradientButton>
             </div>
-          </div>
+          </Section>
         </article>
       </div>
     </div>
@@ -196,9 +206,11 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-24 pt-12">
-      <h2 className="text-display text-3xl font-semibold md:text-4xl">{title}</h2>
-      <div className="mt-4">{children}</div>
+    <section id={id} className="mt-14 scroll-mt-28">
+      <h2 className="text-display text-2xl font-semibold tracking-tight md:text-3xl">
+        {title}
+      </h2>
+      <div className="mt-4 space-y-3">{children}</div>
     </section>
   );
 }

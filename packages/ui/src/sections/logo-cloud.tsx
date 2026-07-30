@@ -25,10 +25,10 @@ export interface LogoCloudProps extends SectionDensityProps {
   className?: string;
 }
 
-const speedMap = {
-  slow: "40s",
-  normal: "25s",
-  fast: "15s",
+const speedClasses = {
+  slow: "animate-[scroll-x_40s_linear_infinite]",
+  normal: "animate-[scroll-x_25s_linear_infinite]",
+  fast: "animate-[scroll-x_15s_linear_infinite]",
 } as const;
 
 export function LogoCloud({
@@ -40,7 +40,51 @@ export function LogoCloud({
   className,
 }: LogoCloudProps) {
   const compact = useCompactMode(compactProp);
-  const duration = speedMap[speed];
+
+  const track = (
+    <div
+      className={cn(
+        "flex w-max gap-12",
+        speedClasses[speed],
+        "motion-reduce:animate-none",
+        pauseOnHover && "hover:[animation-play-state:paused]"
+      )}
+    >
+      {[...logos, ...logos].map((item, i) => {
+        const content = (
+          <div
+            className={cn(
+              "flex shrink-0 items-center justify-center opacity-40 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0",
+              compact ? "h-10 w-24" : "h-12 w-32"
+            )}
+          >
+            {item.logo}
+          </div>
+        );
+
+        if (item.href) {
+          return (
+            <a
+              key={`${item.alt}-${i}`}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={item.alt}
+              className="shrink-0"
+            >
+              {content}
+            </a>
+          );
+        }
+
+        return (
+          <div key={`${item.alt}-${i}`} className="shrink-0" aria-label={item.alt}>
+            {content}
+          </div>
+        );
+      })}
+    </div>
+  );
 
   return (
     <section className={cn(sectionPadding(compact), className)}>
@@ -56,49 +100,10 @@ export function LogoCloud({
         <div
           className={cn(
             "relative overflow-hidden",
-            "[mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+            "[mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
           )}
         >
-          <div
-            className={cn(
-              "flex w-max gap-12",
-              pauseOnHover && "hover:[animation-play-state:paused]"
-            )}
-            style={{
-              animation: `scroll-x ${duration} linear infinite`,
-            }}
-          >
-            {/* Duplicate for seamless loop */}
-            {[...logos, ...logos].map((item, i) => {
-              const content = (
-                <div
-                  key={i}
-                  className={cn(
-                    "flex shrink-0 items-center justify-center opacity-40 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0",
-                    compact ? "h-10 w-24" : "h-12 w-32"
-                  )}
-                >
-                  {item.logo}
-                </div>
-              );
-
-              if (item.href) {
-                return (
-                  <a
-                    key={i}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={item.alt}
-                  >
-                    {content}
-                  </a>
-                );
-              }
-
-              return content;
-            })}
-          </div>
+          {track}
         </div>
       </div>
     </section>
